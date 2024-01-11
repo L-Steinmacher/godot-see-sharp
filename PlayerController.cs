@@ -3,73 +3,107 @@ using System;
 
 public partial class PlayerController : CharacterBody2D
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
-	public const float WallJumpVerticalVelocity = -400.0f;
-	private const float Friction = 0.3f;
-	private const float Acceleration = 0.2f;
-	private const float DashSpeed = 1000.0f;
-	private bool isDashing = false;
-	private bool canDash = true;
-	private double dashTimer = 1;
-	private double dashTimeReset = 1;
-	public bool isAttacking = false;
-	private bool isWallJumping = false;
-	private double wallJumpTimer = .3;
-	private double wallJumpTimeReset = .3;
+    public Vector2 facingDirection = new Vector2(0, 0);
+    private Vector2 velocity = new Vector2();
+    public const float Speed = 300.0f;
+    public const float JumpVelocity = -400.0f;
+    public const float WallJumpVerticalVelocity = -300.0f;
+    private const float Friction = 0.3f;
+    private const float Acceleration = 0.2f;
+    private const float DashSpeed = 500.0f;
+    public const float DashGravity = 0.0f;
+    private bool isDashing = false;
+    private bool canDash = true;
+    private double dashTimer = 1;
+    private double dashTimeReset = 1;
+    public bool isAttacking = false;
+    private bool isWallJumping = false;
+    private double wallJumpTimer = .3;
+    private double wallJumpTimeReset = .3;
+    // Get the gravity from the project settings to be synced with RigidBody nodes.
+    public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    private AnimatedSprite2D animatedSprite2D;
+    public int Health = 3;
+    private bool isTakingDammage = false;
+    [Signal]
+    public delegate void DeathEventHandler();
 
-	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-	public float dashGravity = 0.0f;
-
-	public override void _PhysicsProcess(double delta)
+    public override void _Ready()
     {
-        Vector2 velocity = Velocity;
+        animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    }
 
-        // Add the gravity.
-        if (!IsOnFloor())
+    public override void _PhysicsProcess(double delta)
+    {
+        if (Health > 0)
         {
-            velocity.Y += gravity * (float)delta;
-        }
-
-        if (IsOnFloor())
-            if (!isDashing)
+            velocity = Velocity;
+            // Add the gravity.
+            if (!IsOnFloor())
             {
-                canDash = true;
+                velocity.Y += gravity * (float)delta;
             }
 
-        velocity = ProcessJump(delta, velocity);
-        Vector2 direction = ProcessMovement(ref velocity);
+            if (IsOnFloor())
+                if (!isDashing)
+                {
+                    canDash = true;
+                }
+            if (velocity.X > 0)
+            {
+                animatedSprite2D.FlipH = false;
+            }
+            else if (velocity.X < 0)
+            {
+                animatedSprite2D.FlipH = true;
+            }
 
-        velocity = ProcessDash(delta, velocity, direction);
+            velocity = ProcessJump(delta, velocity);
 
-        Velocity = velocity;
-        MoveAndSlide();
+            velocity = ProcessDash(delta, velocity, facingDirection);
+            facingDirection = ProcessMovement(ref velocity);
+
+            Velocity = velocity;
+            MoveAndSlide();
+        }
     }
 
     private Vector2 ProcessMovement(ref Vector2 velocity)
     {
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
-        Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+        Vector2 direction = Input.GetVector("move_left", "move_right", "climb_up", "climb_down");
+        if (!isTakingDammage)
+        {
+            if (direction.X < 0)
+            {
+                facingDirection = new Vector2(-1, 0);
+                animatedSprite2D.FlipH = true;
+            }
+            else if (direction.X > 0)
+            {
+                facingDirection = new Vector2(1, 0);
+                animatedSprite2D.FlipH = false;
+            }
+        }
+        if (IsOnFloor())
+        {
+            if (direction != Vector2.Zero)
+            {
+                animatedSprite2D.Play("Run");
+                velocity.X = Mathf.Lerp(velocity.X, direction.X * Speed, Acceleration);
+            }
+            else
+            {
+                animatedSprite2D.Play("Idle");
+                velocity.X = Mathf.Lerp(Velocity.X, 0, Friction);
+            }
+        }
 
-		if (direction.X < 0)
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").FlipH = true;
-		else if (direction.X > 0)
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").FlipH = false;
-		if (IsOnFloor()) {
-			if (direction != Vector2.Zero)
-			{
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play("Run");
-				velocity.X = Mathf.Lerp(velocity.X, direction.X * Speed, Acceleration);
-			}
-			else
-			{
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play("Idle");
-				velocity.X = Mathf.Lerp(Velocity.X, 0, Friction);
-			}
-		}
-
+        if (velocity.X < 10 && velocity.X > -10)
+        {
+            isTakingDammage = false;
+        }
         return direction;
     }
 
@@ -79,7 +113,7 @@ public partial class PlayerController : CharacterBody2D
         {
             if (Input.IsActionJustPressed("dash"))
             {
-                velocity.Y = dashGravity;
+                velocity.Y = DashGravity;
                 isDashing = true;
                 canDash = false;
                 velocity.X = DashSpeed * direction.X;
@@ -98,33 +132,42 @@ public partial class PlayerController : CharacterBody2D
             }
         }
 
+
         return velocity;
     }
 
     private Vector2 ProcessJump(double delta, Vector2 velocity)
     {
-		if (!IsOnFloor()) {
-			if (velocity.Y < 0)
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play("Jump");
-			else
-				GetNode<AnimatedSprite2D>("AnimatedSprite2D").Play("Fall");
-		}
-        if (Input.IsActionPressed("ui_accept") && IsOnFloor())
-            velocity.Y = JumpVelocity;
-
-        if (!isWallJumping)
+        if (!IsOnFloor())
         {
-            if (Input.IsActionJustPressed("ui_accept") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
+            if (velocity.Y < 0)
+                animatedSprite2D.Play("Jump");
+            else
+                animatedSprite2D.Play("Fall");
+        }
+        if (Input.IsActionPressed("jump") && IsOnFloor())
+        {
+            velocity.Y = JumpVelocity;
+        }
+        if (!IsOnFloor())
+        {
+
+            if (!isWallJumping)
             {
-                velocity.Y = WallJumpVerticalVelocity;
-                velocity.X = -JumpVelocity;
-                isWallJumping = true;
-            }
-            if (Input.IsActionJustPressed("ui_accept") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
-            {
-                velocity.Y = WallJumpVerticalVelocity;
-                velocity.X = JumpVelocity;
-                isWallJumping = true;
+                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
+                {
+                    animatedSprite2D.FlipH = false;
+                    velocity.Y = WallJumpVerticalVelocity;
+                    velocity.X = -JumpVelocity;
+                    isWallJumping = true;
+                }
+                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
+                {
+                    animatedSprite2D.FlipH = true;
+                    velocity.Y = WallJumpVerticalVelocity;
+                    velocity.X = JumpVelocity;
+                    isWallJumping = true;
+                }
             }
         }
 
@@ -139,5 +182,48 @@ public partial class PlayerController : CharacterBody2D
         }
 
         return velocity;
+    }
+    public void TakeDamage(int damage)
+    {
+        isTakingDammage = true;
+        Health -= damage;
+        animatedSprite2D.Play("TakeDamage");
+
+        // GD.Print("taking damage: " + Health);
+        // GD.Print("velocity" + velocity);
+        Velocity = new Vector2(-200 * facingDirection.X, -100);
+
+        // GD.Print("velocity after: " + velocity);
+        // GD.Print("animation: " + animatedSprite2D.Animation);
+        if (Health <= 0)
+        {
+            Health = 0;
+            animatedSprite2D.Play("Death");
+            GD.Print("dead in Damage method:  " + animatedSprite2D.Animation);
+        }
+    }
+
+    public void _on_animated_sprite_animation_finished()
+    {
+        GD.Print("animation finished: " + animatedSprite2D.Animation);
+        if (animatedSprite2D.Animation == "Death")
+        {
+            GD.Print("dead");
+            animatedSprite2D.Stop();
+            animatedSprite2D.Hide();
+            Velocity = new Vector2(0, 0);
+            EmitSignal(nameof(Death));
+        }
+    }
+
+    public void RespawnPlayer()
+    {
+        Health = 3;
+        animatedSprite2D.Play("Idle");
+        animatedSprite2D.Show();
+    }
+    public void _on_animated_sprite_2d_animation_changed()
+    {
+        // GD.Print("animation changed: " + animatedSprite2D.Animation);
     }
 }

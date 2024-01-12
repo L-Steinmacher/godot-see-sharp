@@ -29,10 +29,12 @@ public partial class PlayerController : CharacterBody2D
     public const float DashGravity = 0.0f;
     private bool isDashing = false;
     private bool canDash = true;
-    private double dashTimer = .3;
-    private double dashTimeReset = .3;
+    private double dashTimer = .2;
+    private double dashTimeReset = .2;
     private double dashCooldownTimer = 1;
     private double dashCooldownTimeReset = 1;
+    private double damageTimer = .2;
+    private double damageTimerReset = .2;
     public bool isAttacking = false;
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
@@ -73,6 +75,13 @@ public partial class PlayerController : CharacterBody2D
             case PlayerState.Attacking:
                 break;
             case PlayerState.TakingDamage:
+                damageTimer -= delta;
+                if (damageTimer <= 0)
+                {
+                    CurrentState = PlayerState.Idle;
+                    damageTimer = damageTimerReset;
+                    isTakingDammage = false;
+                }
                 break;
             case PlayerState.Dead:
                 break;
@@ -131,10 +140,14 @@ public partial class PlayerController : CharacterBody2D
             }
 
             if (IsOnFloor())
-                if (!isDashing)
+                if (!isDashing && dashCooldownTimer <= 0)
                 {
                     canDash = true;
+                    dashCooldownTimer = dashCooldownTimeReset;
                 }
+            {
+                canDash = true;
+            }
             if (velocity.X > 0)
             {
                 animatedSprite2D.FlipH = false;
@@ -165,6 +178,16 @@ public partial class PlayerController : CharacterBody2D
 
     private void ProcessTimers(double delta)
     {
+        if (isTakingDammage)
+        {
+            damageTimer -= delta;
+            if (damageTimer <= 0)
+            {
+                CurrentState = PlayerState.Idle;
+                damageTimer = damageTimerReset;
+                isTakingDammage = false;
+            }
+        }
         if (isWallJumping)
         {
             wallJumpTimer -= delta;
@@ -178,6 +201,7 @@ public partial class PlayerController : CharacterBody2D
         {
             GD.Print("dashTimer: " + dashTimer);
             dashTimer -= delta;
+            dashCooldownTimer -= delta;
             GhostPlayer ghostPlayer = GhostPlayerInstance.Instantiate() as GhostPlayer;
             Owner.AddChild(ghostPlayer);
             ghostPlayer.GlobalPosition = this.GlobalPosition;
@@ -287,21 +311,16 @@ public partial class PlayerController : CharacterBody2D
     }
     public void TakeDamage(int damage)
     {
+        Velocity = new Vector2(-200 * (animatedSprite2D.FlipH ? -1 : 1), -100);
+        animatedSprite2D.Play("TakeDamage");
+        CurrentState = PlayerState.TakingDamage;
         isTakingDammage = true;
         Health -= damage;
-        animatedSprite2D.Play("TakeDamage");
 
-        // GD.Print("taking damage: " + Health);
-        // GD.Print("velocity" + velocity);
-        velocity = new Vector2(-200 * facingDirection.X, -100);
-
-        // GD.Print("velocity after: " + velocity);
-        // GD.Print("animation: " + animatedSprite2D.Animation);
         if (Health <= 0)
         {
             Health = 0;
             animatedSprite2D.Play("Death");
-            GD.Print("dead in Damage method:  " + animatedSprite2D.Animation);
         }
     }
 

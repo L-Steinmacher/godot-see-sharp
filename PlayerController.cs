@@ -23,12 +23,12 @@ public partial class PlayerController : CharacterBody2D
     public const float WallJumpVerticalVelocity = -300.0f;
     private const float Friction = 0.3f;
     private const float Acceleration = 0.2f;
-    private const float DashSpeed = 800.0f;
+    private const float DashSpeed = 3000.0f;
     public const float DashGravity = 0.0f;
     private bool isDashing = false;
     private bool canDash = true;
-    private double dashTimer = .2;
-    private double dashTimeReset = .2;
+    private double dashTimer = .3;
+    private double dashTimeReset = .3;
     private double dashCooldownTimer = 1;
     private double dashCooldownTimeReset = 1;
     private double damageTimer = .2;
@@ -233,7 +233,7 @@ public partial class PlayerController : CharacterBody2D
         {
             dashTimer = dashTimeReset;
             isDashing = true;
-            Velocity = new Vector2((DashSpeed * direction) + Speed, 0);
+            Velocity = new Vector2(Speed + (DashSpeed * direction), 0);
             gravity = DashGravity;
         }
     }

@@ -262,5 +262,4 @@ target_position = Vector2(0, 10)
 rotation = -1.5708
 target_position = Vector2(0, 10)
 
-[connection signal="animation_changed" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_changed"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_animation_finished"]

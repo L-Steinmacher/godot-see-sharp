@@ -1,0 +1,2 @@
+# Basic 2D side scroller
+As stated above it's a basic 2D side scroller that I'm developing in Godot using C# mono.  Feel free to use what you like from the code BUT be warned that this is my first project in C# as well as my first game.

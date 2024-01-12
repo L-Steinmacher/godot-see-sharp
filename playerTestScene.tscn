@@ -262,12 +262,6 @@ layer_0/tile_data = PackedInt32Array(524307, 65536, 65536, 524308, 65536, 65536,
 [node name="Player" parent="." instance=ExtResource("2_e6wok")]
 position = Vector2(394, 134)
 
-[node name="GhostPlayer" type="Node2D" parent="."]
-
-[node name="Sprite2D" type="Sprite2D" parent="GhostPlayer"]
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="GhostPlayer"]
-
 [node name="Spikes" type="Node2D" parent="."]
 position = Vector2(475, 175)
 script = ExtResource("3_y7ud5")

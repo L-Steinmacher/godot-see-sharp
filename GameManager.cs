@@ -17,7 +17,6 @@ public partial class GameManager : Node2D
 
     public void RespawnPlayer()
     {
-        GD.Print("RespawnPlayer GameManager: " + RespawnPoint.GlobalPosition);
         PlayerController pc = GetNode<PlayerController>("Player");
         pc.GlobalPosition = RespawnPoint.GlobalPosition;
         pc.RespawnPlayer();
@@ -25,7 +24,6 @@ public partial class GameManager : Node2D
 
     private void _on_player_death()
     {
-        GD.Print("Player died: on_player_death()");
         RespawnPlayer();
     }
 }

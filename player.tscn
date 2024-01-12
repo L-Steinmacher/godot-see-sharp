@@ -1,6 +1,7 @@
-[gd_scene load_steps=37 format=3 uid="uid://b3gtp8b0jtmv"]
+[gd_scene load_steps=38 format=3 uid="uid://b3gtp8b0jtmv"]
 
 [ext_resource type="Script" path="res://PlayerController.cs" id="1_3m6by"]
+[ext_resource type="PackedScene" uid="uid://1eow83ry5eng" path="res://GhostPlayer.tscn" id="2_hjew5"]
 [ext_resource type="Texture2D" uid="uid://dy3h18bx484wc" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_death_anim_strip_8.png" id="2_hpwjs"]
 [ext_resource type="Texture2D" uid="uid://b0dwuvco3wicr" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_jump_down_anim_strip_3.png" id="2_oeeme"]
 [ext_resource type="Texture2D" uid="uid://b2c5t2xjffl7w" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_idle_anim_strip_4.png" id="3_o358p"]
@@ -236,6 +237,7 @@ animations = [{
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(434, 62)
 script = ExtResource("1_3m6by")
+GhostPlayerInstance = ExtResource("2_hjew5")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -246,7 +248,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"Death"
+animation = &"TakeDamage"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)

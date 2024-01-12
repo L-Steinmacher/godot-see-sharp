@@ -37,6 +37,8 @@ public partial class PlayerController : CharacterBody2D
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
     private double wallJumpTimeReset = .3;
+    private bool canDoubleJump = true;
+    private bool isDoubleJumping = false;
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     private AnimatedSprite2D animatedSprite2D;
@@ -54,6 +56,7 @@ public partial class PlayerController : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
     {
+        ProcessTimers(delta);
         if (CurrentState != PlayerState.TakingDamage)
         {
             InputManager(delta);
@@ -66,8 +69,6 @@ public partial class PlayerController : CharacterBody2D
                 break;
             case PlayerState.Dashing:
                 ProcessDash(velocity);
-                break;
-            case PlayerState.WallJumping:
                 break;
             case PlayerState.Attacking:
                 break;
@@ -83,7 +84,6 @@ public partial class PlayerController : CharacterBody2D
             default:
                 break;
         }
-        ProcessTimers(delta);
     }
 
     private void InputManager(double delta)
@@ -98,14 +98,15 @@ public partial class PlayerController : CharacterBody2D
             }
 
             if (IsOnFloor())
+            {
+                isDoubleJumping = false;
                 if (!isDashing && dashCooldownTimer <= 0)
                 {
                     canDash = true;
                     dashCooldownTimer = dashCooldownTimeReset;
                 }
-            {
-                canDash = true;
             }
+
             if (velocity.X > 0)
             {
                 animatedSprite2D.FlipH = false;
@@ -205,8 +206,13 @@ public partial class PlayerController : CharacterBody2D
                     velocity.X = Mathf.Lerp(Velocity.X, 0, Friction);
                 }
             }
-        }
+            else
+            {
 
+                velocity.X = Mathf.Lerp(velocity.X, direction.X * Speed, Acceleration);
+
+            }
+        }
 
         if (velocity.X < 10 && velocity.X > -10)
         {
@@ -230,19 +236,21 @@ public partial class PlayerController : CharacterBody2D
 
     private Vector2 ProcessJump(Vector2 velocity)
     {
-
         if (!IsOnFloor())
         {
             if (velocity.Y < 0)
                 animatedSprite2D.Play("Jump");
             else
                 animatedSprite2D.Play("Fall");
-        }
-
-        velocity.Y = JumpVelocity;
-
-        if (!IsOnFloor())
-        {
+            if (canDoubleJump && !isDoubleJumping)
+            {
+                if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
+                {
+                    velocity.Y = JumpVelocity;
+                    isDoubleJumping = true;
+                    animatedSprite2D.Play("DoubleJump");
+                }
+            }
             if (!isWallJumping)
             {
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
@@ -260,6 +268,10 @@ public partial class PlayerController : CharacterBody2D
                     isWallJumping = true;
                 }
             }
+        }
+        else
+        {
+            velocity.Y = JumpVelocity;
         }
         return velocity;
     }
@@ -288,6 +300,10 @@ public partial class PlayerController : CharacterBody2D
             animatedSprite2D.Hide();
             Velocity = new Vector2(0, 0);
             EmitSignal(nameof(Death));
+        }
+        else if (animatedSprite2D.Animation == "DoubleJump")
+        {
+            animatedSprite2D.Play("Fall");
         }
     }
 

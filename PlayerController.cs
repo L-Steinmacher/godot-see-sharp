@@ -41,6 +41,7 @@ public partial class PlayerController : CharacterBody2D
     private bool isDoubleJumping = false;
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    public float gravityReset = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     private AnimatedSprite2D animatedSprite2D;
     public int Health = 3;
     private bool isTakingDammage = false;
@@ -153,7 +154,7 @@ public partial class PlayerController : CharacterBody2D
                 wallJumpTimer = wallJumpTimeReset;
             }
         }
-        if (CurrentState == PlayerState.Dashing)
+        if (isDashing)
         {
             GD.Print("dashTimer: " + dashTimer);
             dashTimer -= delta;
@@ -165,10 +166,13 @@ public partial class PlayerController : CharacterBody2D
 
             if (dashTimer <= 0)
             {
+                GD.Print("dashTimer finsihsed: " + dashTimer);
                 isDashing = false;
+                dashTimer = dashTimeReset;
                 velocity = new Vector2(0, 0);
                 velocity.Y = gravity;
                 CurrentState = PlayerState.Idle;
+                gravity = gravityReset;
             }
         }
     }
@@ -229,8 +233,8 @@ public partial class PlayerController : CharacterBody2D
         {
             dashTimer = dashTimeReset;
             isDashing = true;
-            canDash = false;
-            Velocity = new Vector2(DashSpeed * direction, 0);
+            Velocity = new Vector2((DashSpeed * direction) + Speed, 0);
+            gravity = DashGravity;
         }
     }
 

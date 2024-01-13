@@ -4,56 +4,49 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Launch (Select Scene)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "/Applications/Godot_mono.app/Contents/MacOS/Godot",
-            "args": [],
+            "args": [
+                "--path",
+                "${workspaceRoot}",
+                "${command:godot.csharp.getLaunchScene}"
+            ],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
         {
-            "name": ".NET Core Attach",
+            "name": "Auto Attach",
+            "type": "godot-mono",
+            "request": "attach",
+            "address": "localhost",
+            "port": 6007
+        },
+        {
+            "name": "Attach",
             "type": "coreclr",
             "request": "attach"
         },
         {
-            "name": "Play in Editor",
-            "type": "godot-mono",
-            "mode": "playInEditor",
-            "request": "launch"
-        },
-        {
-            "name": "Launch",
-            "type": "godot-mono",
+            "name": "Launch in Editor",
+            "type": "coreclr",
             "request": "launch",
-            "mode": "executable",
             "preLaunchTask": "build",
-            "executable": "/Applications/Godot_mono.app/Contents/MacOS/Godot",
-            "executableArguments": ["--path", "${workspaceRoot}"]
-        },
-        {
-            "name": "Launch (Select Scene)",
-            "type": "godot-mono",
-            "request": "launch",
-            "mode": "executable",
-            "preLaunchTask": "build",
-            "executable": "/Applications/Godot_mono.app/Contents/MacOS/Godot",
-            "executableArguments": [
-                "--path",
-                "${workspaceRoot}",
-                "${command:SelectLaunchScene}"
-            ]
-        },
-        {
-            "name": "Attach",
-            "type": "godot-mono",
-            "request": "attach",
-            "address": "localhost",
-            "port": 23685
+            "program":"/Applications/Godot_mono.app/Contents/MacOS/Godot",
+            // "program": "env:GODOT4",
+            "args": [
+                        "--path",
+                        "${workspaceRoot}",
+                        "--editor"
+                    ],
+            "stopAtEntry": false,
+            "cwd":"${workspaceFolder}",
+            "console": "internalConsole",
         }
     ]
 }

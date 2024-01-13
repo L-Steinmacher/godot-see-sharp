@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://cmijsppg3jup7"]
+
+[ext_resource type="Script" path="res://JumpEffects.cs" id="1_7sby5"]
+[ext_resource type="Texture2D" uid="uid://bgo8cl72l3igg" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_before_jump_dust_anim_strip_4.png" id="2_khq2e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rtn3o"]
+atlas = ExtResource("2_khq2e")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ybvyk"]
+atlas = ExtResource("2_khq2e")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j47e3"]
+atlas = ExtResource("2_khq2e")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rbph3"]
+atlas = ExtResource("2_khq2e")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ro3cy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rtn3o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ybvyk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j47e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rbph3")
+}],
+"loop": false,
+"name": &"LiftoffDust",
+"speed": 25.0
+}]
+
+[node name="JumpEffects" type="Node"]
+script = ExtResource("1_7sby5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ro3cy")
+animation = &"LiftoffDust"
+frame = 3
+frame_progress = 1.0
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

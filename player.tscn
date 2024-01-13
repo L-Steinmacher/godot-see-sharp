@@ -1,10 +1,11 @@
-[gd_scene load_steps=42 format=3 uid="uid://b3gtp8b0jtmv"]
+[gd_scene load_steps=43 format=3 uid="uid://b3gtp8b0jtmv"]
 
 [ext_resource type="Script" path="res://PlayerController.cs" id="1_3m6by"]
 [ext_resource type="PackedScene" uid="uid://1eow83ry5eng" path="res://GhostPlayer.tscn" id="2_hjew5"]
 [ext_resource type="Texture2D" uid="uid://dy3h18bx484wc" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_death_anim_strip_8.png" id="2_hpwjs"]
 [ext_resource type="Texture2D" uid="uid://b0dwuvco3wicr" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_jump_down_anim_strip_3.png" id="2_oeeme"]
 [ext_resource type="Texture2D" uid="uid://b2c5t2xjffl7w" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_idle_anim_strip_4.png" id="3_o358p"]
+[ext_resource type="PackedScene" uid="uid://cmijsppg3jup7" path="res://JumpEffects.tscn" id="3_ota25"]
 [ext_resource type="Texture2D" uid="uid://c1irsai1d8oj6" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_jump_double_anim_strip_3.png" id="4_k14yq"]
 [ext_resource type="Texture2D" uid="uid://bvubfls46kli2" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_jump_up_anim_strip_3.png" id="4_v3k83"]
 [ext_resource type="Texture2D" uid="uid://b5y3ix57d2dct" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_run_anim_strip_6.png" id="5_pqn32"]
@@ -265,6 +266,7 @@ animations = [{
 position = Vector2(434, 62)
 script = ExtResource("1_3m6by")
 GhostPlayerInstance = ExtResource("2_hjew5")
+JumpEffectsInstance = ExtResource("3_ota25")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -275,7 +277,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"DoubleJump"
+animation = &"Jump"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)

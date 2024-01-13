@@ -49,6 +49,8 @@ public partial class PlayerController : CharacterBody2D
     public delegate void DeathEventHandler();
     [Export]
     public PackedScene GhostPlayerInstance;
+    [Export]
+    public PackedScene JumpEffectsInstance;
 
     public override void _Ready()
     {
@@ -240,21 +242,14 @@ public partial class PlayerController : CharacterBody2D
 
     private Vector2 ProcessJump(Vector2 velocity)
     {
+        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
         if (!IsOnFloor())
         {
             if (velocity.Y < 0)
                 animatedSprite2D.Play("Jump");
             else
                 animatedSprite2D.Play("Fall");
-            if (canDoubleJump && !isDoubleJumping)
-            {
-                if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
-                {
-                    velocity.Y = JumpVelocity;
-                    isDoubleJumping = true;
-                    animatedSprite2D.Play("DoubleJump");
-                }
-            }
+
             if (!isWallJumping)
             {
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
@@ -272,9 +267,21 @@ public partial class PlayerController : CharacterBody2D
                     isWallJumping = true;
                 }
             }
+            if (!IsColliding && canDoubleJump && !isDoubleJumping)
+            {
+                if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
+                {
+                    velocity.Y = JumpVelocity;
+                    isDoubleJumping = true;
+                    animatedSprite2D.Play("DoubleJump");
+                }
+            }
         }
         else
         {
+            JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
+            Owner.AddChild(je);
+            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
             velocity.Y = JumpVelocity;
         }
         return velocity;

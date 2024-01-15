@@ -9,7 +9,6 @@ public partial class JumpEffects : Node
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         animatedSprite2D.Play("LiftoffDust");
-
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -20,7 +19,6 @@ public partial class JumpEffects : Node
     {
         if (animatedSprite2D.Animation == "LiftoffDust")
         {
-            GD.Print("LiftoffDust");
             QueueFree();
         }
     }

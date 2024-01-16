@@ -19,7 +19,7 @@ public partial class JumpEffects : Node
     {
         if (animatedSprite2D.Animation == "LiftoffDust")
         {
-            QueueFree();
+            Destroy();
         }
     }
 

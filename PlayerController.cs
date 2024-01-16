@@ -24,7 +24,7 @@ public partial class PlayerController : CharacterBody2D
     public const float WallJumpVerticalVelocity = -300.0f;
     private const float Friction = 0.3f;
     private const float Acceleration = 0.2f;
-    private const float DashSpeed = 3000.0f;
+    private const float DashSpeed = 500.0f;
     public const float DashGravity = 0.0f;
     private bool isDashing = false;
     private bool canDash = true;
@@ -78,7 +78,7 @@ public partial class PlayerController : CharacterBody2D
             case PlayerState.Running:
                 break;
             case PlayerState.Dashing:
-                ProcessDash(velocity);
+                Velocity = ProcessDash(velocity);
                 break;
             case PlayerState.TakingDamage:
                 TakeDamage(delta);
@@ -184,8 +184,8 @@ public partial class PlayerController : CharacterBody2D
             {
                 isDashing = false;
                 dashTimer = dashTimeReset;
-                velocity = new Vector2(0, 0);
-                velocity.Y = gravity;
+                Velocity = new Vector2(0, 0);
+                // velocity.Y = gravity;
                 CurrentState = PlayerState.Idle;
                 gravity = gravityReset;
             }
@@ -207,7 +207,7 @@ public partial class PlayerController : CharacterBody2D
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
         Vector2 direction = Input.GetVector("move_left", "move_right", "climb_up", "climb_down");
-        if (!isTakingDammage)
+        if (!isTakingDammage && !isDashing)
         {
             if (Input.IsActionJustPressed("dash"))
             {
@@ -215,13 +215,21 @@ public partial class PlayerController : CharacterBody2D
             }
             if (direction.X < 0)
             {
-                facingDirection = new Vector2(-1, 0);
+                facingDirection.X = -1;
                 animatedSprite2D.FlipH = true;
             }
             else if (direction.X > 0)
             {
-                facingDirection = new Vector2(1, 0);
+                facingDirection.X = 1;
                 animatedSprite2D.FlipH = false;
+            }
+            else if (direction.Y < 0)
+            {
+                facingDirection.Y = -1;
+            }
+            else if (direction.Y > 0)
+            {
+                facingDirection.Y = 1;
             }
             if (IsOnFloor())
             {
@@ -237,9 +245,7 @@ public partial class PlayerController : CharacterBody2D
             }
             else
             {
-
                 velocity.X = Mathf.Lerp(velocity.X, direction.X * Speed, Acceleration);
-
             }
         }
 
@@ -250,17 +256,42 @@ public partial class PlayerController : CharacterBody2D
         return direction;
     }
 
-    private void ProcessDash(Vector2 velocity)
+    private Vector2 ProcessDash(Vector2 velocity)
     {
-
-        var direction = animatedSprite2D.FlipH ? -1 : 1;
+        // var direction = animatedSprite2D.FlipH ? -1 : 1;
         if (canDash && !isDashing)
         {
             dashTimer = dashTimeReset;
             isDashing = true;
-            Velocity = new Vector2(Speed + (DashSpeed * direction), 0);
+            GD.Print("dash X" + velocity.X);
+            velocity.X = DashSpeed * facingDirection.X;
+            // GD.Print("dash Y" + facingDirection.Y);
+
             gravity = DashGravity;
+            if (facingDirection.Y < .5 && facingDirection.Y > -.5)
+            {
+                GD.Print("dash Y" + velocity.Y);
+                velocity.Y = 0;
+            }
+            else if (facingDirection.Y <= -.5 && facingDirection.Y >= -.85)
+            {
+                velocity.Y = DashSpeed * -.5f;
+            }
+            else if (facingDirection.Y < -.85)
+            {
+                gravity = gravityReset;
+                velocity.Y = DashSpeed * -1;
+            }
+            else if (facingDirection.Y >= .5 && facingDirection.Y <= .85)
+            {
+                velocity.Y = DashSpeed * .5f;
+            }
+            else if (facingDirection.Y > .85)
+            {
+                velocity.Y = DashSpeed * 1;
+            }
         }
+        return velocity;
     }
 
     private Vector2 ProcessJump(Vector2 velocity)
@@ -294,6 +325,9 @@ public partial class PlayerController : CharacterBody2D
             {
                 if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
                 {
+                    JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
+                    Owner.AddChild(je);
+                    je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
                     velocity.Y = JumpVelocity;
                     isDoubleJumping = true;
                     animatedSprite2D.Play("DoubleJump");

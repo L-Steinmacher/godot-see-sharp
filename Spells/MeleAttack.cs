@@ -28,4 +28,10 @@ public partial class MeleAttack : Spell
     {
         throw new NotImplementedException();
     }
+
+    public void _on_area_2d_body_entered(Node body)
+    {
+        throw new NotImplementedException();
+
+    }
 }

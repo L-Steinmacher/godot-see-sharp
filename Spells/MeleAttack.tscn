@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://vjfvbmgniaym"]
+[gd_scene load_steps=10 format=3 uid="uid://vjfvbmgniaym"]
 
+[ext_resource type="Script" path="res://Spells/MeleAttack.cs" id="1_13efa"]
 [ext_resource type="Texture2D" uid="uid://cgq25tu26hxgi" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/sword_effect_strip_4(new).png" id="1_yabt3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v4wh4"]
@@ -38,10 +39,45 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CSharpScript" id="CSharpScript_xusnu"]
+script/source = "using Godot;
+using System;
+
+public partial class MeleAttack : Spell
+{
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+    {
+    }
+
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
+    {
+    }
+
+    public override void SetUp()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void CastSpell()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void LoadResourcePath()
+    {
+        throw new NotImplementedException();
+    }
+}
+"
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cyvrm"]
 size = Vector2(16, 16)
 
 [node name="MeleAttack" type="Node2D"]
+script = ExtResource("1_13efa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(1, 1.0625)
@@ -51,7 +87,10 @@ frame = 3
 frame_progress = 1.0
 
 [node name="Area2D" type="Area2D" parent="."]
+script = SubResource("CSharpScript_xusnu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_cyvrm")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

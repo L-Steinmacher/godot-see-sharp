@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://vjfvbmgniaym"]
+
+[ext_resource type="Texture2D" uid="uid://cgq25tu26hxgi" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/sword_effect_strip_4(new).png" id="1_yabt3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4wh4"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_komeh"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwaom"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aub24"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lx342"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4wh4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_komeh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwaom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aub24")
+}],
+"loop": false,
+"name": &"Attack",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cyvrm"]
+size = Vector2(16, 16)
+
+[node name="MeleAttack" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1, 1.0625)
+sprite_frames = SubResource("SpriteFrames_lx342")
+animation = &"Attack"
+frame = 3
+frame_progress = 1.0
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_cyvrm")

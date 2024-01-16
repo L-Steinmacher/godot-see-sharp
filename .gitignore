@@ -2,5 +2,9 @@
 .godot/
 
 .vscode/
+
+# Use the .local.* pattern to ignore files that are for local use only
+*.local.*
+
 *.code-workspace
 .history/

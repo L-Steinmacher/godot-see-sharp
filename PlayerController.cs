@@ -96,8 +96,6 @@ public partial class PlayerController : CharacterBody2D
         }
     }
 
-
-
     private void InputManager(double delta)
     {
         if (health > 0)
@@ -196,12 +194,11 @@ public partial class PlayerController : CharacterBody2D
     }
     private void ProcessIdle(ref Vector2 velocity)
     {
-        if (velocity.X < 5 && velocity.X > -5 && health > 0)
+        if (velocity.X < 5 && velocity.X > -5 && health > 0 && !isAttacking)
         {
-            if (animatedSprite2D.Animation != "Attack" && animatedSprite2D.IsPlaying())
-            {
-                animatedSprite2D.Play("Idle");
-            }
+
+            animatedSprite2D.Play("Idle");
+
         }
         velocity.X = Mathf.Lerp(velocity.X, 0, Friction);
     }
@@ -267,6 +264,7 @@ public partial class PlayerController : CharacterBody2D
             dashTimer = dashTimeReset;
             isDashing = true;
             GD.Print("dash X" + velocity.X);
+            Velocity = new Vector2(Speed, 0);
             velocity.X = DashSpeed * facingDirection.X;
             // GD.Print("dash Y" + facingDirection.Y);
 
@@ -350,7 +348,10 @@ public partial class PlayerController : CharacterBody2D
         if (!isAttacking)
         {
             isAttacking = true;
+            var faceDirection = animatedSprite2D.FlipH;
+            GameManager.MagicController.CastSpell(faceDirection);
             animatedSprite2D.Play("Attack");
+
         }
     }
     public void TakeDamage(int damage)

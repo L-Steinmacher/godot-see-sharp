@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cle0c1koanuw7"]
+[gd_scene load_steps=13 format=3 uid="uid://cle0c1koanuw7"]
 
 [ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania asset pack v1.01/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
@@ -250,6 +250,8 @@ sources/0 = SubResource("TileSetAtlasSource_g8by4")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjw8"]
 size = Vector2(13.5, 14)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6oo4k"]
+
 [node name="GameManager" type="Node2D" node_paths=PackedStringArray("RespawnPoint")]
 position = Vector2(2, 4)
 script = ExtResource("1_yehvv")
@@ -301,18 +303,21 @@ grow_vertical = 2
 
 [node name="HealthBar" type="ProgressBar" parent="InterfaceManager/MainInterface"]
 layout_mode = 1
-offset_left = 22.0
+offset_left = 21.0
 offset_top = 24.0
-offset_right = 213.0
+offset_right = 212.0
 offset_bottom = 51.0
 theme_override_constants/outline_size = -1
+show_percentage = false
 
 [node name="ManaBar" type="ProgressBar" parent="InterfaceManager/MainInterface"]
+material = SubResource("ShaderMaterial_6oo4k")
 layout_mode = 1
 offset_left = 21.0
 offset_top = 61.0
 offset_right = 212.0
 offset_bottom = 88.0
+show_percentage = false
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

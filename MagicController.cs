@@ -14,10 +14,19 @@ public partial class MagicController : Node
     {
     }
 
-    public void CastSpell()
+    public void CastSpell(bool facingDirection)
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate() as Spell;
-        equippedSpell.SetUp();
-        // GameManager.
+        equippedSpell.SetUp(facingDirection);
+        if (facingDirection)
+        {
+            equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastRight").GlobalPosition;
+        }
+        else
+        {
+            equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastLeft").GlobalPosition;
+        }
+        GameManager.GlobalGameManager.AddChild(equippedSpell);
+        GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
     }
 }

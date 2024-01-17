@@ -311,8 +311,9 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"Idle"
-frame_progress = 0.736112
+animation = &"Attack"
+frame = 3
+frame_progress = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)
@@ -329,5 +330,11 @@ position = Vector2(-5, 0)
 rotation = -1.5708
 target_position = Vector2(0, 18)
 collide_with_areas = true
+
+[node name="SpellCastRight" type="Marker2D" parent="."]
+position = Vector2(12, 0)
+
+[node name="SpellCastLeft" type="Marker2D" parent="."]
+position = Vector2(-12, 0)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_animation_finished"]

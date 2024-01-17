@@ -27,11 +27,11 @@ public partial class InterfaceManager : CanvasLayer
 
     public static void UpdateHealthBar(float health, float maxHealth)
     {
-        HealthBar.Value = (health / maxHealth) * HealthBar.MaxValue;
+        HealthBar.Value = health / maxHealth * HealthBar.MaxValue;
     }
 
     public static void UpdateManaBar(float mana, float maxMana)
     {
-        ManaBar.Value = (mana / maxMana) * ManaBar.MaxValue;
+        ManaBar.Value = mana / maxMana * ManaBar.MaxValue;
     }
 }

@@ -47,6 +47,8 @@ public partial class PlayerController : CharacterBody2D
     private AnimatedSprite2D animatedSprite2D;
     public int Health = 3;
     private bool isTakingDammage = false;
+    public float mana = 100f;
+    private float maxMana = 100f;
     [Signal]
     public delegate void DeathEventHandler();
     [Export]
@@ -57,6 +59,7 @@ public partial class PlayerController : CharacterBody2D
     public override void _Ready()
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        GameManager.Player = this;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -142,6 +145,10 @@ public partial class PlayerController : CharacterBody2D
                 {
                     CurrentState = PlayerState.Dashing;
                     // velocity = ProcessDash(delta, velocity, facingDirection);
+                }
+                if (Input.IsActionJustPressed("interact"))
+                {
+                    InteractWithObject();
                 }
                 facingDirection = ProcessMovement(ref velocity);
             }
@@ -270,7 +277,6 @@ public partial class PlayerController : CharacterBody2D
             gravity = DashGravity;
             if (facingDirection.Y < .5 && facingDirection.Y > -.5)
             {
-                GD.Print("dash Y" + velocity.Y);
                 velocity.Y = 0;
             }
             else if (facingDirection.Y <= -.5 && facingDirection.Y >= -.85)
@@ -345,12 +351,10 @@ public partial class PlayerController : CharacterBody2D
     }
     private void ProcessMeleAttack()
     {
-        GD.Print(isAttacking);
         if (!isAttacking)
         {
             isAttacking = true;
             animatedSprite2D.Play("Attack");
-            GD.Print(animatedSprite2D.Animation);
         }
     }
     public void TakeDamage(int damage)
@@ -367,11 +371,43 @@ public partial class PlayerController : CharacterBody2D
             animatedSprite2D.Play("Death");
         }
     }
+
+    public void UpdateMana(float amount)
+    {
+        mana += amount;
+        if (mana > maxMana)
+        {
+            mana = maxMana;
+        }
+        else if (mana < 0)
+        {
+            mana = 0;
+        }
+    }
     public void RespawnPlayer()
     {
         Health = 3;
         animatedSprite2D.Play("Idle");
         animatedSprite2D.Show();
+    }
+
+    public void InteractWithObject()
+    {
+        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        if (IsColliding)
+        {
+            Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider() ?? (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
+            if (obj.Owner is Collectable)
+            {
+                GD.Print("Collectable: " + obj.Name);
+                if (obj.Owner is MagicPotion)
+                {
+                    MagicPotion mp = (MagicPotion)obj.Owner;
+                    mp.UsePotion();
+                }
+            }
+
+        }
     }
     public void _on_animated_sprite_animation_finished()
     {

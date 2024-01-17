@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cle0c1koanuw7"]
+[gd_scene load_steps=11 format=3 uid="uid://cle0c1koanuw7"]
 
 [ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania asset pack v1.01/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Spikes.cs" id="3_y7ud5"]
 [ext_resource type="Texture2D" uid="uid://b7saa6xdw60d1" path="res://platformer_metroidvania asset pack v1.01/miscellaneous sprites/spikes.png" id="4_oehpa"]
 [ext_resource type="PackedScene" uid="uid://pr37jssdkbs7" path="res://RespawnPoint.tscn" id="6_3y3mf"]
+[ext_resource type="PackedScene" uid="uid://t1uql688nfyr" path="res://MagicPotion.tscn" id="7_beh0f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g8by4"]
 texture = ExtResource("1_tenwm")
@@ -282,6 +283,9 @@ shape = SubResource("RectangleShape2D_pjjw8")
 
 [node name="RespawnPoint" parent="." instance=ExtResource("6_3y3mf")]
 position = Vector2(183, 125)
+
+[node name="MagicPotion" parent="." instance=ExtResource("7_beh0f")]
+position = Vector2(318, 178)
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

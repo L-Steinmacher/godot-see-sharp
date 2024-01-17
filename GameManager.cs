@@ -5,6 +5,8 @@ public partial class GameManager : Node2D
 {
     [Export]
     public Marker2D RespawnPoint;
+    public static PlayerController Player;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {

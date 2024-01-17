@@ -297,7 +297,7 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(434, 62)
+position = Vector2(440, 62)
 script = ExtResource("1_3m6by")
 GhostPlayerInstance = ExtResource("2_hjew5")
 JumpEffectsInstance = ExtResource("3_ota25")
@@ -321,10 +321,12 @@ zoom = Vector2(4, 4)
 
 [node name="LeftRayCast2D" type="RayCast2D" parent="."]
 rotation = 1.5708
-target_position = Vector2(0, 10)
+target_position = Vector2(6.48499e-05, 17)
+collide_with_areas = true
 
 [node name="RightRayCast2D" type="RayCast2D" parent="."]
 rotation = -1.5708
-target_position = Vector2(0, 10)
+target_position = Vector2(-5.34058e-05, 15)
+collide_with_areas = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_animation_finished"]

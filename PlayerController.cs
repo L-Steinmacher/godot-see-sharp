@@ -196,7 +196,7 @@ public partial class PlayerController : CharacterBody2D
     }
     private void ProcessIdle(ref Vector2 velocity)
     {
-        if (velocity.X < 5 && velocity.X > -5)
+        if (velocity.X < 5 && velocity.X > -5 && health > 0)
         {
             if (animatedSprite2D.Animation != "Attack" && animatedSprite2D.IsPlaying())
             {
@@ -388,6 +388,7 @@ public partial class PlayerController : CharacterBody2D
         health = maxHealth;
         animatedSprite2D.Play("Idle");
         animatedSprite2D.Show();
+        isTakingDammage = false;
     }
 
     public void InteractWithObject()

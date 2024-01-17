@@ -45,7 +45,8 @@ public partial class PlayerController : CharacterBody2D
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     public float gravityReset = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     private AnimatedSprite2D animatedSprite2D;
-    public int Health = 3;
+    public float health = 3;
+    private float maxHealth = 3;
     private bool isTakingDammage = false;
     public float mana = 100f;
     private float maxMana = 100f;
@@ -60,10 +61,14 @@ public partial class PlayerController : CharacterBody2D
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         GameManager.Player = this;
+        InterfaceManager.UpdateHealthBar(health, maxHealth);
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        InterfaceManager.UpdateHealthBar(health, maxHealth);
+        InterfaceManager.UpdateManaBar(mana, maxMana);
+
         ProcessTimers(delta);
         if (CurrentState != PlayerState.TakingDamage)
         {
@@ -84,27 +89,18 @@ public partial class PlayerController : CharacterBody2D
                 Velocity = ProcessDash(velocity);
                 break;
             case PlayerState.TakingDamage:
-                TakeDamage(delta);
+                // TakeDamageTimer(delta);
                 break;
             default:
                 break;
         }
     }
 
-    private void TakeDamage(double delta)
-    {
-        damageTimer -= delta;
-        if (damageTimer <= 0)
-        {
-            CurrentState = PlayerState.Idle;
-            damageTimer = damageTimerReset;
-            isTakingDammage = false;
-        }
-    }
+
 
     private void InputManager(double delta)
     {
-        if (Health > 0)
+        if (health > 0)
         {
             velocity = Velocity;
             // Add the gravity.
@@ -359,19 +355,21 @@ public partial class PlayerController : CharacterBody2D
     }
     public void TakeDamage(int damage)
     {
-        var currentDirection = animatedSprite2D.FlipH ? -1 : 1;
-        Velocity = new Vector2(-200 * currentDirection, -100);
+        Velocity = new Vector2(-200 * facingDirection.X, -100);
         animatedSprite2D.Play("TakeDamage");
         CurrentState = PlayerState.TakingDamage;
         isTakingDammage = true;
-        Health -= damage;
-        if (Health <= 0)
+        health -= damage;
+        InterfaceManager.UpdateHealthBar(health, maxHealth);
+
+        if (health <= 0)
         {
-            Health = 0;
+            health = 0;
+            InterfaceManager.UpdateHealthBar(maxHealth, maxHealth);
+            GD.Print("dead in Take Damage");
             animatedSprite2D.Play("Death");
         }
     }
-
     public void UpdateMana(float amount)
     {
         mana += amount;
@@ -386,7 +384,8 @@ public partial class PlayerController : CharacterBody2D
     }
     public void RespawnPlayer()
     {
-        Health = 3;
+        Velocity = new Vector2(0, 0);
+        health = maxHealth;
         animatedSprite2D.Play("Idle");
         animatedSprite2D.Show();
     }
@@ -414,10 +413,9 @@ public partial class PlayerController : CharacterBody2D
         GD.Print("animation finished: " + animatedSprite2D.Animation);
         if (animatedSprite2D.Animation == "Death")
         {
-            GD.Print("dead");
+            GD.Print("dead animation finished");
             animatedSprite2D.Stop();
             animatedSprite2D.Hide();
-            Velocity = new Vector2(0, 0);
             EmitSignal(nameof(Death));
         }
         if (animatedSprite2D.Animation == "DoubleJump")

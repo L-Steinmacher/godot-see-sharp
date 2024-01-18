@@ -61,7 +61,6 @@ public partial class PlayerController : CharacterBody2D
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         GameManager.Player = this;
-        InterfaceManager.UpdateHealthBar(health, maxHealth);
     }
 
     public override void _PhysicsProcess(double delta)

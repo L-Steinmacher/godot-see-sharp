@@ -29,7 +29,8 @@ public partial class MeleAttack : Spell
 
     public override void CastSpell(bool faceDirection)
     {
-        GD.Print("Casting MeleAttack");
+        // GD.Print("Casting MeleAttack");
+        animatedSprite.FlipH = faceDirection;
         animatedSprite.Play("Cast");
     }
 
@@ -45,7 +46,7 @@ public partial class MeleAttack : Spell
     }
     public void _on_animated_sprite_2d_animation_finished()
     {
-        if (animatedSprite.Animation == "Cast")
-            QueueFree();
+        // if (animatedSprite.Animation == "Cast")
+        QueueFree();
     }
 }

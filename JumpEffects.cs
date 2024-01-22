@@ -8,12 +8,16 @@ public partial class JumpEffects : Node
     public override void _Ready()
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-        animatedSprite2D.Play("LiftoffDust");
+        // animatedSprite2D.Play("LiftoffDust");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+    }
+    public void Liftoff()
+    {
+        animatedSprite2D.Play("LiftoffDust");
     }
     public void _on_animated_sprite_2d_animation_finished()
     {

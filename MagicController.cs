@@ -25,8 +25,8 @@ public partial class MagicController : Node
     public void CastSpell(bool facingDirection)
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
-        // GD.Print("Casting " + equippedSpell.Owner.Name);
-        equippedSpell.SetUp(facingDirection);
+        GD.Print("Castig " + equippedSpell.Name);
+
         if (!facingDirection)
         {
             equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastRight").GlobalPosition;
@@ -36,6 +36,8 @@ public partial class MagicController : Node
             equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastLeft").GlobalPosition;
         }
         GameManager.GlobalGameManager.AddChild(equippedSpell);
+        // equippedSpell.SetUp(facingDirection);
+        equippedSpell.CastSpell(facingDirection);
         GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
     }
 }

@@ -16,15 +16,12 @@ public partial class MagicPotion : Collectable
 
     public void UsePotion()
     {
-        GD.Print("Potion used");
         GameManager.Player.UpdateMana(10);
-        GD.Print("Mana: " + GameManager.Player.mana);
         QueueFree();
     }
 
     public void _on_area_2d_body_entered(Node body)
     {
-        GD.Print("Potion collected" + body.Name);
         if (body is PlayerController)
         {
             GetNode<RichTextLabel>("Node2D/RichTextLabel").Show();

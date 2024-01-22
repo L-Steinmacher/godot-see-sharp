@@ -327,6 +327,7 @@ public partial class PlayerController : CharacterBody2D
                     JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
                     Owner.AddChild(je);
                     je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
+                    je.Liftoff();
                     velocity.Y = JumpVelocity;
                     isDoubleJumping = true;
                     animatedSprite2D.Play("DoubleJump");
@@ -338,6 +339,7 @@ public partial class PlayerController : CharacterBody2D
             JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
             Owner.AddChild(je);
             je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
+            je.Liftoff();
             velocity.Y = JumpVelocity;
         }
         return velocity;
@@ -410,7 +412,7 @@ public partial class PlayerController : CharacterBody2D
     }
     public void _on_animated_sprite_animation_finished()
     {
-        GD.Print("animation finished: " + animatedSprite2D.Animation);
+        // GD.Print("animation finished: " + animatedSprite2D.Animation);
         if (animatedSprite2D.Animation == "Death")
         {
             GD.Print("dead animation finished");

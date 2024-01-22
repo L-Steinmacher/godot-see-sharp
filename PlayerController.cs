@@ -347,10 +347,9 @@ public partial class PlayerController : CharacterBody2D
         if (!isAttacking)
         {
             isAttacking = true;
-            var faceDirection = animatedSprite2D.FlipH;
+            bool faceDirection = animatedSprite2D.FlipH;
             GameManager.MagicController.CastSpell(faceDirection);
             animatedSprite2D.Play("Attack");
-
         }
     }
     public void TakeDamage(int damage)

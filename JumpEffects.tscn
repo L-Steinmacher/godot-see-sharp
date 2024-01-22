@@ -1,31 +1,31 @@
 [gd_scene load_steps=11 format=3 uid="uid://cmijsppg3jup7"]
 
 [ext_resource type="Script" path="res://JumpEffects.cs" id="1_7sby5"]
-[ext_resource type="Texture2D" uid="uid://bgo8cl72l3igg" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_before_jump_dust_anim_strip_4.png" id="2_khq2e"]
-[ext_resource type="Texture2D" uid="uid://cvvlqe8uay322" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_before_or_after_jump_srip_2.png" id="3_wcfsd"]
+[ext_resource type="Texture2D" uid="uid://bgo8cl72l3igg" path="res://platformer_metroidvania/herochar sprites(new)/herochar_before_jump_dust_anim_strip_4.png" id="2_iso62"]
+[ext_resource type="Texture2D" uid="uid://cvvlqe8uay322" path="res://platformer_metroidvania/herochar sprites(new)/herochar_before_or_after_jump_srip_2.png" id="3_wx5pe"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rtn3o"]
-atlas = ExtResource("2_khq2e")
+atlas = ExtResource("2_iso62")
 region = Rect2(0, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ybvyk"]
-atlas = ExtResource("2_khq2e")
+atlas = ExtResource("2_iso62")
 region = Rect2(16, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j47e3"]
-atlas = ExtResource("2_khq2e")
+atlas = ExtResource("2_iso62")
 region = Rect2(32, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rbph3"]
-atlas = ExtResource("2_khq2e")
+atlas = ExtResource("2_iso62")
 region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_33aw0"]
-atlas = ExtResource("3_wcfsd")
+atlas = ExtResource("3_wx5pe")
 region = Rect2(0, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bqoa3"]
-atlas = ExtResource("3_wcfsd")
+atlas = ExtResource("3_wx5pe")
 region = Rect2(16, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ro3cy"]

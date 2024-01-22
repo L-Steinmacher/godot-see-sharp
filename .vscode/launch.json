@@ -47,6 +47,12 @@
             "stopAtEntry": false,
             "cwd":"${workspaceFolder}",
             "console": "internalConsole",
+        },
+        {
+            "name": "Launch in Editor (Verbose)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
         }
     ]
 }

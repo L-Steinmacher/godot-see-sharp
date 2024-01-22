@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://cle0c1koanuw7"]
 
-[ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania asset pack v1.01/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
+[ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
 [ext_resource type="PackedScene" uid="uid://b3gtp8b0jtmv" path="res://player.tscn" id="2_e6wok"]
 [ext_resource type="Script" path="res://Spikes.cs" id="3_y7ud5"]
-[ext_resource type="Texture2D" uid="uid://b7saa6xdw60d1" path="res://platformer_metroidvania asset pack v1.01/miscellaneous sprites/spikes.png" id="4_oehpa"]
+[ext_resource type="Texture2D" uid="uid://b7saa6xdw60d1" path="res://platformer_metroidvania/miscellaneous sprites/spikes.png" id="4_oehpa"]
 [ext_resource type="PackedScene" uid="uid://pr37jssdkbs7" path="res://RespawnPoint.tscn" id="6_3y3mf"]
 [ext_resource type="PackedScene" uid="uid://t1uql688nfyr" path="res://MagicPotion.tscn" id="7_beh0f"]
 [ext_resource type="Script" path="res://InterfaceManager.cs" id="8_nmt15"]

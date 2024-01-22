@@ -1,12 +1,20 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class MagicController : Node
 {
-    public PackedScene EquippedSpell = ResourceLoader.Load<PackedScene>("res://Spells/MeleAttack.tscn");
+    public PackedScene EquippedSpell;
+    public List<PackedScene> AvSpells = new List<PackedScene>();
+
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+
+    public MagicController()
     {
+
+        PackedScene meleAttackScene = (PackedScene)ResourceLoader.Load("res://Spells/MeleAttack.tscn");
+        AvSpells.Add(meleAttackScene);
+        EquippedSpell = AvSpells[0];
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -16,9 +24,10 @@ public partial class MagicController : Node
 
     public void CastSpell(bool facingDirection)
     {
-        Spell equippedSpell = (Spell)EquippedSpell.Instantiate() as Spell;
+        Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
+        // GD.Print("Casting " + equippedSpell.Owner.Name);
         equippedSpell.SetUp(facingDirection);
-        if (facingDirection)
+        if (!facingDirection)
         {
             equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastRight").GlobalPosition;
         }

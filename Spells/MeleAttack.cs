@@ -3,33 +3,39 @@ using System;
 
 public partial class MeleAttack : Spell
 {
-    public AnimatedSprite2D animatedSprite;
-    // Called when the node enters the scene tree for the first time.
+    private AnimatedSprite2D animatedSprite;
+    public string ResourcePath = "res://Spells/MeleAttack.tscn";
+
+
     public override void _Ready()
     {
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
     }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
     }
 
     public override void SetUp(bool faceDirection)
     {
-        animatedSprite.FlipH = facingDirection;
-        facingDirection = faceDirection;
+        if (animatedSprite != null)
+        {
+            animatedSprite.FlipH = faceDirection;
+        }
+        else
+        {
+            GD.Print("animatedSprite is null");
+        }
     }
 
-    public override void CastSpell(bool facingDirection)
+    public override void CastSpell(bool faceDirection)
     {
         GD.Print("Casting MeleAttack");
-        animatedSprite.Play("Attack");
+        animatedSprite.Play("Cast");
     }
 
-    public override void LoadResourcePath()
+    public override string LoadResourcePath()
     {
-        throw new NotImplementedException();
+        return ResourcePath;
     }
 
     public void _on_area_2d_body_entered(Node body)
@@ -39,8 +45,7 @@ public partial class MeleAttack : Spell
     }
     public void _on_animated_sprite_2d_animation_finished()
     {
-        if (animatedSprite.Animation == "Attack")
-
+        if (animatedSprite.Animation == "Cast")
             QueueFree();
     }
 }

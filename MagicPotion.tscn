@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://t1uql688nfyr"]
 
 [ext_resource type="Script" path="res://MagicPotion.cs" id="1_l5aga"]
-[ext_resource type="Texture2D" uid="uid://ctf6pvnvf60a" path="res://platformer_metroidvania asset pack v1.01/miscellaneous sprites/antidote_potion.png" id="2_wv84r"]
+[ext_resource type="Texture2D" uid="uid://ctf6pvnvf60a" path="res://platformer_metroidvania/miscellaneous sprites/antidote_potion.png" id="2_wv84r"]
 
 [sub_resource type="Animation" id="Animation_v88hc"]
 resource_name = "Bounce"

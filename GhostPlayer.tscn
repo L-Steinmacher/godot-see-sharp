@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://1eow83ry5eng"]
 
 [ext_resource type="Script" path="res://GhostPlayer.cs" id="1_yd1pb"]
-[ext_resource type="Texture2D" uid="uid://bvubfls46kli2" path="res://platformer_metroidvania asset pack v1.01/herochar sprites(new)/herochar_jump_up_anim_strip_3.png" id="2_7y4td"]
+[ext_resource type="Texture2D" uid="uid://bvubfls46kli2" path="res://platformer_metroidvania/herochar sprites(new)/herochar_jump_up_anim_strip_3.png" id="2_15g8e"]
 
 [sub_resource type="Animation" id="Animation_dxrjx"]
 resource_name = "fade_out"
@@ -45,7 +45,7 @@ script = ExtResource("1_yd1pb")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.94902)
 visibility_layer = 2
-texture = ExtResource("2_7y4td")
+texture = ExtResource("2_15g8e")
 hframes = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

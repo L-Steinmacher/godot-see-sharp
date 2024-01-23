@@ -19,13 +19,13 @@ public partial class PlayerController : CharacterBody2D
     public PlayerState CurrentState = PlayerState.Idle;
     public Vector2 facingDirection = new Vector2(0, 0);
     private Vector2 velocity = new Vector2();
-    public const float Speed = 300.0f;
-    public const float JumpVelocity = -400.0f;
-    public const float WallJumpVerticalVelocity = -300.0f;
-    private const float Friction = 0.3f;
     private const float Acceleration = 0.2f;
-    private const float DashSpeed = 500.0f;
     public const float DashGravity = 0.0f;
+    private const float DashSpeed = 500.0f;
+    private const float Friction = 0.3f;
+    public const float JumpVelocity = -400.0f;
+    public const float Speed = 300.0f;
+    public const float WallJumpVerticalVelocity = -300.0f;
     private bool isDashing = false;
     private bool canDash = true;
     private double dashTimer = .3;
@@ -35,7 +35,6 @@ public partial class PlayerController : CharacterBody2D
     private double damageTimer = .2;
     private double damageTimerReset = .2;
     public bool isAttacking = false;
-
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
     private double wallJumpTimeReset = .3;
@@ -262,10 +261,10 @@ public partial class PlayerController : CharacterBody2D
         {
             dashTimer = dashTimeReset;
             isDashing = true;
-            GD.Print("dash X" + velocity.X);
+            int direction = animatedSprite2D.FlipH ? -1 : 1;
             Velocity = new Vector2(Speed, 0);
-            velocity.X = DashSpeed * facingDirection.X;
-            // GD.Print("dash Y" + facingDirection.Y);
+            velocity.X = DashSpeed * direction;
+
 
             gravity = DashGravity;
             if (facingDirection.Y < .5 && facingDirection.Y > -.5)
@@ -394,14 +393,12 @@ public partial class PlayerController : CharacterBody2D
 
     public void InteractWithObject()
     {
-        // var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
-        if (GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
+        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        if (IsColliding)
         {
-            Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider();
-            GD.Print("LeftRayCast2D: " + obj.Name);
+            Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider() ?? (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
             if (obj.Owner is Collectable)
             {
-                GD.Print("Collectable: " + obj.Owner.Name);
                 if (obj.Owner is MagicPotion)
                 {
                     MagicPotion mp = (MagicPotion)obj.Owner;
@@ -409,34 +406,6 @@ public partial class PlayerController : CharacterBody2D
                 }
             }
         }
-        else if (GetNode<RayCast2D>("RightRayCast2D").IsColliding())
-        {
-            Node obj = (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
-            GD.Print("RightRayCast2D: " + obj.Owner.Name);
-            if (obj.Owner is Collectable)
-            {
-                GD.Print("Collectable: " + obj.Name);
-                if (obj.Owner is MagicPotion)
-                {
-                    MagicPotion mp = (MagicPotion)obj.Owner;
-                    mp.UsePotion();
-                }
-            }
-        }
-        // if (IsColliding)
-        // {
-        //     Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider() ?? (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
-        //     if (obj.Owner is Collectable)
-        //     {
-        //         GD.Print("Collectable: " + obj.Name);
-        //         if (obj.Owner is MagicPotion)
-        //         {
-        //             MagicPotion mp = (MagicPotion)obj.Owner;
-        //             mp.UsePotion();
-        //         }
-        //     }
-
-        // }
     }
     public void _on_animated_sprite_animation_finished()
     {

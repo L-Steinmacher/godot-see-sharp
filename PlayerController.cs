@@ -97,7 +97,7 @@ public partial class PlayerController : CharacterBody2D
 
     private void InputManager(double delta)
     {
-        if (health > 0)
+        if (health > 0 && !isAttacking)
         {
             velocity = Velocity;
             // Add the gravity.
@@ -105,46 +105,46 @@ public partial class PlayerController : CharacterBody2D
             {
                 velocity.Y += gravity * (float)delta;
             }
-            if (CurrentState != PlayerState.MeleAttacking)
+
+            if (IsOnFloor())
             {
-                if (IsOnFloor())
+                isDoubleJumping = false;
+                if (!isDashing && dashCooldownTimer <= 0)
                 {
-                    isDoubleJumping = false;
-                    if (!isDashing && dashCooldownTimer <= 0)
-                    {
-                        canDash = true;
-                        dashCooldownTimer = dashCooldownTimeReset;
-                    }
+                    canDash = true;
+                    dashCooldownTimer = dashCooldownTimeReset;
                 }
-
-                if (velocity.X > 0)
-                {
-                    animatedSprite2D.FlipH = false;
-                }
-                else if (velocity.X < 0)
-                {
-                    animatedSprite2D.FlipH = true;
-                }
-                if (Input.IsActionJustPressed("attack"))
-                {
-                    CurrentState = PlayerState.MeleAttacking;
-                }
-
-                if (Input.IsActionJustPressed("jump"))
-                {
-                    velocity = ProcessJump(velocity);
-                }
-                if (Input.IsActionJustPressed("dash"))
-                {
-                    CurrentState = PlayerState.Dashing;
-                    // velocity = ProcessDash(delta, velocity, facingDirection);
-                }
-                if (Input.IsActionJustPressed("interact"))
-                {
-                    InteractWithObject();
-                }
-                facingDirection = ProcessMovement(ref velocity);
             }
+
+            if (velocity.X > 0)
+            {
+                animatedSprite2D.FlipH = false;
+            }
+            else if (velocity.X < 0)
+            {
+                animatedSprite2D.FlipH = true;
+            }
+            if (Input.IsActionJustPressed("attack"))
+            {
+                CurrentState = PlayerState.MeleAttacking;
+            }
+
+            if (Input.IsActionJustPressed("jump"))
+            {
+                velocity = ProcessJump(velocity);
+            }
+            if (Input.IsActionJustPressed("dash"))
+            {
+                CurrentState = PlayerState.Dashing;
+                // velocity = ProcessDash(delta, velocity, facingDirection);
+            }
+            if (Input.IsActionJustPressed("interact"))
+            {
+
+                InteractWithObject();
+            }
+            facingDirection = ProcessMovement(ref velocity);
+
             Velocity = velocity;
             MoveAndSlide();
         }
@@ -206,7 +206,7 @@ public partial class PlayerController : CharacterBody2D
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
         Vector2 direction = Input.GetVector("move_left", "move_right", "climb_up", "climb_down");
-        if (!isTakingDammage && !isDashing)
+        if (!isTakingDammage && !isDashing && !isAttacking)
         {
             if (Input.IsActionJustPressed("dash"))
             {
@@ -394,10 +394,25 @@ public partial class PlayerController : CharacterBody2D
 
     public void InteractWithObject()
     {
-        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
-        if (IsColliding)
+        // var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        if (GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
         {
-            Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider() ?? (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
+            Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider();
+            GD.Print("LeftRayCast2D: " + obj.Name);
+            if (obj.Owner is Collectable)
+            {
+                GD.Print("Collectable: " + obj.Owner.Name);
+                if (obj.Owner is MagicPotion)
+                {
+                    MagicPotion mp = (MagicPotion)obj.Owner;
+                    mp.UsePotion();
+                }
+            }
+        }
+        else if (GetNode<RayCast2D>("RightRayCast2D").IsColliding())
+        {
+            Node obj = (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
+            GD.Print("RightRayCast2D: " + obj.Owner.Name);
             if (obj.Owner is Collectable)
             {
                 GD.Print("Collectable: " + obj.Name);
@@ -407,8 +422,21 @@ public partial class PlayerController : CharacterBody2D
                     mp.UsePotion();
                 }
             }
-
         }
+        // if (IsColliding)
+        // {
+        //     Node obj = (Node)GetNode<RayCast2D>("LeftRayCast2D").GetCollider() ?? (Node)GetNode<RayCast2D>("RightRayCast2D").GetCollider();
+        //     if (obj.Owner is Collectable)
+        //     {
+        //         GD.Print("Collectable: " + obj.Name);
+        //         if (obj.Owner is MagicPotion)
+        //         {
+        //             MagicPotion mp = (MagicPotion)obj.Owner;
+        //             mp.UsePotion();
+        //         }
+        //     }
+
+        // }
     }
     public void _on_animated_sprite_animation_finished()
     {

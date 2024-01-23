@@ -31,6 +31,7 @@ public partial class MeleAttack : Spell
     {
         // GD.Print("Casting MeleAttack");
         animatedSprite.FlipH = faceDirection;
+
         animatedSprite.Play("Cast");
     }
 

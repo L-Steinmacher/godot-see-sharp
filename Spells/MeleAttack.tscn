@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dh7xdb43bc0kv"]
+[gd_scene load_steps=13 format=3 uid="uid://dh7xdb43bc0kv"]
 
 [ext_resource type="Script" path="res://Spells/MeleAttack.cs" id="1_13efa"]
 [ext_resource type="Texture2D" uid="uid://cgq25tu26hxgi" path="res://platformer_metroidvania/herochar sprites(new)/sword_effect_strip_4(new).png" id="1_yabt3"]
@@ -19,6 +19,22 @@ region = Rect2(32, 0, 16, 16)
 atlas = ExtResource("1_yabt3")
 region = Rect2(48, 0, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_fv61b"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hr7xq"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjo5o"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s01v2"]
+atlas = ExtResource("1_yabt3")
+region = Rect2(48, 0, 16, 16)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_dcea3"]
 animations = [{
 "frames": [{
@@ -36,6 +52,23 @@ animations = [{
 }],
 "loop": false,
 "name": &"Cast",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fv61b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hr7xq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjo5o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s01v2")
+}],
+"loop": false,
+"name": &"DoubleSlash",
 "speed": 5.0
 }]
 
@@ -48,8 +81,12 @@ script = ExtResource("1_13efa")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.875, 0.9375)
 sprite_frames = SubResource("SpriteFrames_dcea3")
 animation = &"Cast"
+frame = 3
+frame_progress = 1.0
 metadata/_edit_group_ = true
 
 [node name="Area2D" type="Area2D" parent="."]

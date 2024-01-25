@@ -6,7 +6,6 @@ public partial class MeleAttack : Spell
     private AnimatedSprite2D animatedSprite;
     public string ResourcePath = "res://Spells/MeleAttack.tscn";
 
-
     public override void _Ready()
     {
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
@@ -17,19 +16,11 @@ public partial class MeleAttack : Spell
 
     public override void SetUp(bool faceDirection)
     {
-        if (animatedSprite != null)
-        {
-            animatedSprite.FlipH = faceDirection;
-        }
-        else
-        {
-            GD.Print("animatedSprite is null");
-        }
+        animatedSprite.FlipH = faceDirection;
     }
 
     public override void CastSpell(bool faceDirection)
     {
-        // GD.Print("Casting MeleAttack");
         animatedSprite.FlipH = faceDirection;
 
         animatedSprite.Play("Cast");
@@ -47,7 +38,7 @@ public partial class MeleAttack : Spell
     }
     public void _on_animated_sprite_2d_animation_finished()
     {
-        // if (animatedSprite.Animation == "Cast")
-        QueueFree();
+        if (animatedSprite.Animation == "Cast")
+            QueueFree();
     }
 }

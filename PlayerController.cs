@@ -140,8 +140,11 @@ public partial class PlayerController : CharacterBody2D
             }
             if (Input.IsActionJustPressed("interact"))
             {
-
                 InteractWithObject();
+            }
+
+            if (Input.IsActionJustPressed("cycle_attack")) {
+                GameManager.MagicController.CycleAttack();
             }
             facingDirection = ProcessMovement(ref velocity);
 
@@ -346,6 +349,7 @@ public partial class PlayerController : CharacterBody2D
     }
     private void ProcessMeleAttack()
     {
+
         if (!isAttacking)
         {
             isAttacking = true;

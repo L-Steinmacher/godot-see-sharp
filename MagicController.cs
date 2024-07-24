@@ -7,7 +7,6 @@ public partial class MagicController : Node
     public PackedScene EquippedSpell;
     public List<PackedScene> AvSpells = new List<PackedScene>();
     public MeleAttack meleAttack = new MeleAttack();
-
     // Called when the node enters the scene tree for the first time.
 
     public MagicController()
@@ -25,7 +24,7 @@ public partial class MagicController : Node
     public void CastSpell(bool facingDirection)
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
-        GD.Print("Castig " + equippedSpell.Name);
+        GD.Print("Casting " + equippedSpell.Name);
 
         if (!facingDirection)
         {
@@ -39,5 +38,15 @@ public partial class MagicController : Node
 
         equippedSpell.CastSpell(facingDirection);
         GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
+    }
+
+    public void CycleAttack () {
+        int curIndex = AvSpells.IndexOf(EquippedSpell);
+        curIndex += 1;
+        if (curIndex >= AvSpells.Count) {
+            GD.Print("Cycle Attack");
+            curIndex = 0;
+        }
+        EquippedSpell = AvSpells[curIndex];
     }
 }

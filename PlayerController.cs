@@ -96,6 +96,7 @@ public partial class PlayerController : CharacterBody2D
 
     private void InputManager(double delta)
     {
+
         if (health > 0 && !isAttacking)
         {
             velocity = Velocity;
@@ -355,12 +356,14 @@ public partial class PlayerController : CharacterBody2D
     }
     public void TakeDamage(int damage)
     {
-        Velocity = new Vector2(-200 * facingDirection.X, -100);
-        animatedSprite2D.Play("TakeDamage");
-        CurrentState = PlayerState.TakingDamage;
-        isTakingDammage = true;
-        health -= damage;
-        InterfaceManager.UpdateHealthBar(health, maxHealth);
+        if (!isTakingDammage) {
+            Velocity = new Vector2(-200 * facingDirection.X, -100);
+            animatedSprite2D.Play("TakeDamage");
+            CurrentState = PlayerState.TakingDamage;
+            isTakingDammage = true;
+            health -= damage;
+            InterfaceManager.UpdateHealthBar(health, maxHealth);
+        }
 
         if (health <= 0)
         {
@@ -425,6 +428,9 @@ public partial class PlayerController : CharacterBody2D
         {
             isAttacking = false;
             CurrentState = PlayerState.Idle;
+        }
+        if (animatedSprite2D.Animation == "TakeDamage") {
+            isTakingDammage = false;
         }
     }
 }

@@ -4,7 +4,7 @@ using System;
 public partial class MeleAttack : Spell
 {
     private AnimatedSprite2D animatedSprite;
-    public string ResourcePath = "res://Spells/MeleAttack.tscn";
+    public string ResourcePath = "res://Attacks/MeleAttack.tscn";
 
     public override void _Ready()
     {

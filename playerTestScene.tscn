@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cle0c1koanuw7"]
+[gd_scene load_steps=21 format=3 uid="uid://cle0c1koanuw7"]
 
 [ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://pr37jssdkbs7" path="res://RespawnPoint.tscn" id="6_3y3mf"]
 [ext_resource type="PackedScene" uid="uid://t1uql688nfyr" path="res://MagicPotion.tscn" id="7_beh0f"]
 [ext_resource type="Script" path="res://InterfaceManager.cs" id="8_nmt15"]
-[ext_resource type="Script" path="res://SlimeEnimy.cs" id="9_88cqs"]
+[ext_resource type="Script" path="res://SlimeEnemy.cs" id="9_88cqs"]
 [ext_resource type="Texture2D" uid="uid://dxl0kwdkqesdv" path="res://platformer_metroidvania/enemies sprites/slime/slime_idle_anim_strip_5.png" id="10_cua83"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g8by4"]
@@ -341,6 +341,9 @@ _data = {
 "RESET": SubResource("Animation_biice")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qu1uw"]
+radius = 47.0956
+
 [node name="GameManager" type="Node2D" node_paths=PackedStringArray("RespawnPoint")]
 position = Vector2(2, 4)
 script = ExtResource("1_yehvv")
@@ -433,6 +436,21 @@ metadata/_edit_group_ = true
 libraries = {
 "": SubResource("AnimationLibrary_tc4ja")
 }
+
+[node name="Detection" type="Area2D" parent="SlimeEnimy"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SlimeEnimy/Detection"]
+shape = SubResource("CircleShape2D_qu1uw")
+
+[node name="LeftRayCast2D" type="RayCast2D" parent="SlimeEnimy"]
+position = Vector2(-9, 2)
+target_position = Vector2(0, 10)
+
+[node name="RightRayCast2D" type="RayCast2D" parent="SlimeEnimy"]
+position = Vector2(11, 1)
+target_position = Vector2(0, 10)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="SlimeEnimy"]
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

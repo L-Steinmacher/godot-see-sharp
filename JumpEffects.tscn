@@ -64,6 +64,6 @@ script = ExtResource("1_7sby5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ro3cy")
-animation = &"new_animation"
+animation = &"LiftoffDust"
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

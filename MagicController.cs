@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public partial class MagicController : Node
 {
     public PackedScene EquippedSpell;
-    public List<PackedScene> AvSpells = new List<PackedScene>();
-    public MeleAttack meleAttack = new MeleAttack();
+    public List<PackedScene> AvSpells = new();
+    public MeleAttack meleAttack = new();
     // Called when the node enters the scene tree for the first time.
 
     public MagicController()

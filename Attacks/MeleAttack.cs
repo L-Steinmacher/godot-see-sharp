@@ -31,9 +31,14 @@ public partial class MeleAttack : Spell
         return ResourcePath;
     }
 
-    public void _on_area_2d_body_entered(Node body)
+    public void _on_area_2d_body_entered(Node2D body)
     {
-        throw new NotImplementedException();
+        GD.Print("body: ", body.Name);
+        // if (body is Ridg)
+        if (body is Enemy) {
+            Enemy e = body as Enemy;
+            e.TakeDamage(1);
+        }
 
     }
     public void _on_animated_sprite_2d_animation_finished()

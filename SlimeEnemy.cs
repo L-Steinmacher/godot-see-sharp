@@ -3,12 +3,8 @@ using System;
 
 public partial class SlimeEnemy : Enemy
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
     private AnimatedSprite2D animatedSprite;
     private string[] animationOptions;
-
-
 
     public override void _Ready()
     {
@@ -22,8 +18,18 @@ public partial class SlimeEnemy : Enemy
 
 	public override void _PhysicsProcess(double delta)
 	{
-        animatedSprite.Play(animationOptions[1]);
+        if (!animatedSprite.IsPlaying()){
+            animatedSprite.Play("Idle");
+        }
 	}
+
+    public override void TakeDamage(int DamageAmount)
+    {
+        Health -= DamageAmount;
+        if (Health <= 0){
+            animatedSprite.Play("Death");
+        }
+    }
 
     private void _on_area_2d_body_entered(Node2D body) {
         if (body is CharacterBody2D) {
@@ -31,6 +37,12 @@ public partial class SlimeEnemy : Enemy
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(DamageDealtAmount);
             }
+        }
+    }
+
+    private void _on_animated_sprite_2d_animation_finished() {
+        if (animatedSprite.Animation == "Death") {
+            QueueFree();
         }
     }
 }

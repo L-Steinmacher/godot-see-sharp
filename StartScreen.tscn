@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://b6twpgkbky5ke"]
-
-[node name="MainMenu" type="Node2D"]
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-clip_contents = true
-offset_right = 40.0
-offset_bottom = 40.0

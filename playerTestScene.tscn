@@ -258,6 +258,9 @@ position = Vector2(2, 4)
 script = ExtResource("1_yehvv")
 RespawnPoint = NodePath("RespawnPoint")
 
+[node name="SlimeEnemy" parent="." instance=ExtResource("9_3fww5")]
+position = Vector2(435, 175)
+
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(77, 57)
 tile_set = SubResource("TileSet_x1s0l")
@@ -313,7 +316,7 @@ offset_top = 24.0
 offset_right = 212.0
 offset_bottom = 51.0
 theme_override_constants/outline_size = -1
-show_percentage = false
+step = 1.0
 
 [node name="ManaBar" type="ProgressBar" parent="InterfaceManager/MainInterface"]
 material = SubResource("ShaderMaterial_6oo4k")
@@ -323,9 +326,6 @@ offset_top = 61.0
 offset_right = 212.0
 offset_bottom = 88.0
 show_percentage = false
-
-[node name="SlimeEnemy" parent="." instance=ExtResource("9_3fww5")]
-position = Vector2(548, 174)
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://80ofkvjkxm15"]
+
+[ext_resource type="Script" path="res://Spikes.cs" id="1_xhyd2"]
+[ext_resource type="Texture2D" uid="uid://b7saa6xdw60d1" path="res://platformer_metroidvania/miscellaneous sprites/spikes.png" id="2_snwr0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjw8"]
+size = Vector2(13.5, 14)
+
+[node name="Spikes" type="Node2D"]
+position = Vector2(475, 175)
+script = ExtResource("1_xhyd2")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0.132431, -0.099325)
+rotation = 3.14159
+scale = Vector2(0.983446, 0.987584)
+texture = ExtResource("2_snwr0")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 1)
+rotation = -3.14159
+shape = SubResource("RectangleShape2D_pjjw8")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

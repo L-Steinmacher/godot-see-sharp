@@ -17,8 +17,8 @@ public partial class PlayerController : CharacterBody2D
     }
 
     public PlayerState CurrentState = PlayerState.Idle;
-    public Vector2 facingDirection = new Vector2(0, 0);
-    private Vector2 velocity = new Vector2();
+    public Vector2 facingDirection = new(0, 0);
+    private Vector2 velocity = new();
     private const float Acceleration = 0.2f;
     public const float DashGravity = 0.0f;
     private const float DashSpeed = 500.0f;

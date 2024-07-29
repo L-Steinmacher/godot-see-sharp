@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://pr37jssdkbs7" path="res://RespawnPoint.tscn" id="6_3y3mf"]
 [ext_resource type="PackedScene" uid="uid://t1uql688nfyr" path="res://MagicPotion.tscn" id="7_beh0f"]
 [ext_resource type="Script" path="res://InterfaceManager.cs" id="8_nmt15"]
-[ext_resource type="PackedScene" uid="uid://bknv87ke7xyvy" path="res://SlimeEnemy.tscn" id="9_3fww5"]
+[ext_resource type="PackedScene" uid="uid://bknv87ke7xyvy" path="res://SlimeEnemy.tscn" id="9_6ru4h"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g8by4"]
 texture = ExtResource("1_tenwm")
@@ -258,9 +258,6 @@ position = Vector2(2, 4)
 script = ExtResource("1_yehvv")
 RespawnPoint = NodePath("RespawnPoint")
 
-[node name="SlimeEnemy" parent="." instance=ExtResource("9_3fww5")]
-position = Vector2(435, 175)
-
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(77, 57)
 tile_set = SubResource("TileSet_x1s0l")
@@ -326,6 +323,9 @@ offset_top = 61.0
 offset_right = 212.0
 offset_bottom = 88.0
 show_percentage = false
+
+[node name="SlimeEnemy" parent="." instance=ExtResource("9_6ru4h")]
+position = Vector2(431, 142)
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

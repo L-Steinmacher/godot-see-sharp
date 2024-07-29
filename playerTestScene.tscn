@@ -325,7 +325,7 @@ offset_bottom = 88.0
 show_percentage = false
 
 [node name="SlimeEnemy" parent="." instance=ExtResource("9_6ru4h")]
-position = Vector2(431, 142)
+position = Vector2(240, 190)
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

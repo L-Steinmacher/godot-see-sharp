@@ -4,13 +4,15 @@ using System;
 public partial class SlimeEnemy : Enemy
 {
     private Vector2 velocity = new();
+    private float facingDirection;
     private AnimatedSprite2D animatedSprite;
     private string[] animationOptions;
     private double idleTimer = 1;
     private float walkSpeed = 30;
-    private RayCast2D leftRayCast2D;
-    private RayCast2D rightRayCast2D;
-
+    private RayCast2D bottomLeftRayCast;
+    private RayCast2D bottomRightRayCast;
+    private RayCast2D middleRightRayCast;
+    private RayCast2D middleLeftRayCast;
 
     public override void _Ready()
     {
@@ -18,8 +20,10 @@ public partial class SlimeEnemy : Enemy
         DamageDealtAmount = 1;
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         animationOptions = animatedSprite.SpriteFrames.GetAnimationNames();
-        leftRayCast2D = GetNode<RayCast2D>("LeftRayCast2d");
-        rightRayCast2D = GetNode<RayCast2D>("RightRayCast2d");
+        bottomLeftRayCast = GetNode<RayCast2D>("LeftBottomRayCast");
+        bottomRightRayCast = GetNode<RayCast2D>("RightBottomRayCast");
+        middleLeftRayCast = GetNode<RayCast2D>("RightMiddleRayCast");
+        middleRightRayCast = GetNode<RayCast2D>("LeftMiddleRayCast");
     }
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -43,11 +47,26 @@ public partial class SlimeEnemy : Enemy
 
             if ( idleTimer <= 0) {
                 float facingDirection = animatedSprite.FlipH ? 1: -1;
+                // Sprite Found ledge
+                if (!bottomLeftRayCast.IsColliding() || !bottomRightRayCast.IsColliding()) {
+                    FlipCharacter();
+                }
 
-                // Here be bugs!
-                if (!leftRayCast2D.IsColliding()) {
-                    animatedSprite.FlipH = !animatedSprite.FlipH;
-                    facingDirection = facingDirection * -1;
+                else if (middleLeftRayCast.IsColliding()) {
+                    object obj = middleLeftRayCast.GetCollider();
+
+                    if (obj.GetType().Name != "PlayerController") {
+                        animatedSprite.FlipH = !animatedSprite.FlipH;
+                        facingDirection = facingDirection * -1;
+                    }
+                }
+                else if (middleRightRayCast.IsColliding()) {
+                    Object obj = middleRightRayCast.GetCollider();
+
+                    if (obj.GetType().Name != "PlayerController") {
+                        animatedSprite.FlipH = !animatedSprite.FlipH;
+                        facingDirection = facingDirection * -1;
+                    }
                 }
                 animatedSprite.Play("Walk");
                 velocity.X = walkSpeed * facingDirection;
@@ -56,8 +75,12 @@ public partial class SlimeEnemy : Enemy
             Velocity = velocity;
             MoveAndSlide();
         }
-
 	}
+
+    void FlipCharacter() {
+    animatedSprite.FlipH = !animatedSprite.FlipH;
+    facingDirection *= -1;
+}
 
     public override void TakeDamage(int DamageAmount)
     {

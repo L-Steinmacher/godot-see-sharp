@@ -11,6 +11,5 @@ public abstract partial class Collectable : Interactable
     }
     public void InteractWithObject(Node obj)
     {
-        GD.Print("Potion collected in Collectable Class: " + obj.Name);
     }
 }

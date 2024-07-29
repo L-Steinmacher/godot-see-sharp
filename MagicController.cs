@@ -24,7 +24,6 @@ public partial class MagicController : Node
     public void CastSpell(bool facingDirection)
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
-        GD.Print("Casting " + equippedSpell.Name);
 
         if (!facingDirection)
         {

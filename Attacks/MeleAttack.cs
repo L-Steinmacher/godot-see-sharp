@@ -33,7 +33,6 @@ public partial class MeleAttack : Spell
 
     public void _on_area_2d_body_entered(Node2D body)
     {
-        GD.Print("body: ", body.Name);
         // if (body is Ridg)
         if (body is Enemy) {
             Enemy e = body as Enemy;

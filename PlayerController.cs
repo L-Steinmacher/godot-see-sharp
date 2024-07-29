@@ -373,7 +373,6 @@ public partial class PlayerController : CharacterBody2D
         {
             health = 0;
             InterfaceManager.UpdateHealthBar(maxHealth, maxHealth);
-            GD.Print("dead in Take Damage");
             animatedSprite2D.Play("Death");
         }
     }
@@ -416,10 +415,8 @@ public partial class PlayerController : CharacterBody2D
     }
     public void _on_animated_sprite_animation_finished()
     {
-        // GD.Print("animation finished: " + animatedSprite2D.Animation);
         if (animatedSprite2D.Animation == "Death")
         {
-            GD.Print("dead animation finished");
             animatedSprite2D.Stop();
             animatedSprite2D.Hide();
             EmitSignal(nameof(Death));

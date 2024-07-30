@@ -66,6 +66,12 @@ public partial class PlayerController : CharacterBody2D
     {
         InterfaceManager.UpdateHealthBar(health, maxHealth);
         InterfaceManager.UpdateManaBar(mana, maxMana);
+        if (velocity.Y < 0){
+            animatedSprite2D.Play("Jump");
+            GD.Print("Jump");
+        }
+        else
+            animatedSprite2D.Play("Fall");
 
         ProcessTimers(delta);
         if (CurrentState != PlayerState.TakingDamage)
@@ -301,11 +307,6 @@ public partial class PlayerController : CharacterBody2D
         var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
         if (!IsOnFloor())
         {
-            if (velocity.Y < 0)
-                animatedSprite2D.Play("Jump");
-            else
-                animatedSprite2D.Play("Fall");
-
             if (!isWallJumping)
             {
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())

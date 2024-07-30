@@ -291,7 +291,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ahnye")
 }],
-"loop": true,
+"loop": false,
 "name": &"TakeDamage",
 "speed": 5.0
 }]
@@ -311,7 +311,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"Idle"
+animation = &"Fall"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)

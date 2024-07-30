@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cle0c1koanuw7"]
+[gd_scene load_steps=15 format=3 uid="uid://cle0c1koanuw7"]
 
 [ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://t1uql688nfyr" path="res://MagicPotion.tscn" id="7_beh0f"]
 [ext_resource type="Script" path="res://InterfaceManager.cs" id="8_nmt15"]
 [ext_resource type="PackedScene" uid="uid://bknv87ke7xyvy" path="res://SlimeEnemy.tscn" id="9_6ru4h"]
+[ext_resource type="PackedScene" uid="uid://1i1jhf3q4yfr" path="res://Turret.tscn" id="10_gb16f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g8by4"]
 texture = ExtResource("1_tenwm")
@@ -326,6 +327,9 @@ show_percentage = false
 
 [node name="SlimeEnemy" parent="." instance=ExtResource("9_6ru4h")]
 position = Vector2(240, 190)
+
+[node name="Turret" parent="." instance=ExtResource("10_gb16f")]
+position = Vector2(659, 177)
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

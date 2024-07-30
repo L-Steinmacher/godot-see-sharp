@@ -82,9 +82,9 @@ public partial class SlimeEnemy : Enemy
     facingDirection *= -1;
 }
 
-    public override void TakeDamage(int DamageAmount)
+    public override void TakeDamage(int DamageTakenAmount)
     {
-        Health -= DamageAmount;
+        Health -= DamageTakenAmount;
         if (Health <= 0){
             animatedSprite.Play("Death");
         }
@@ -95,6 +95,7 @@ public partial class SlimeEnemy : Enemy
             if (body is PlayerController) {
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(DamageDealtAmount);
+
             }
         }
     }
@@ -103,5 +104,9 @@ public partial class SlimeEnemy : Enemy
         if (animatedSprite.Animation == "Death") {
             QueueFree();
         }
+    }
+
+    private void _on_detection_body_entered(Node2D body) {
+        GD.Print("Slime detected " + body.Name + " body,");
     }
 }

@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://1i1jhf3q4yfr"]
+
+[ext_resource type="Script" path="res://Turret.cs" id="1_udl1j"]
+[ext_resource type="Texture2D" uid="uid://b1mn3pqyg13lu" path="res://platformer_metroidvania/enemies sprites/turret prototype/turretProto.png" id="2_vqnqr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_852nl"]
+radius = 64.68
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pcp5s"]
+size = Vector2(12.5, 12)
+
+[node name="Turret" type="RigidBody2D"]
+script = ExtResource("1_udl1j")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_vqnqr")
+
+[node name="DetectionRadious" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadious"]
+position = Vector2(-0.5, 2.5)
+shape = SubResource("CircleShape2D_852nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.75, 2)
+shape = SubResource("RectangleShape2D_pcp5s")
+
+[node name="ProjectileSpawn" type="Marker2D" parent="."]
+position = Vector2(-4, -2)
+
+[connection signal="body_entered" from="DetectionRadious" to="." method="_on_detection_radious_body_entered"]
+[connection signal="body_exited" from="DetectionRadious" to="." method="_on_detection_radious_body_exited"]

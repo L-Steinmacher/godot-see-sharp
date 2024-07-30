@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class Turret : RigidBody2D
 {
@@ -7,6 +8,7 @@ public partial class Turret : RigidBody2D
     private double attackCooldownReset = 1.5;
     private bool isAttacking = false;
     private bool active;
+    private PlayerController player;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -25,8 +27,24 @@ public partial class Turret : RigidBody2D
         {
             if (!isAttacking)
             {
-                GD.Print("Pew pew");
-                isAttacking = true;
+                var queryParameters = new PhysicsRayQueryParameters2D
+                {
+                    From = this.Position,
+                    To = player.Position,
+                    Exclude = new Godot.Collections.Array<Rid> { this.GetRid() }
+                };
+
+                var spaceState = GetWorld2D().DirectSpaceState;
+                Godot.Collections.Dictionary result = spaceState.IntersectRay(queryParameters);
+                if (result != null && result.ContainsKey("collider"))
+                {
+                    Node collider = result["collider"].As<Node>();
+                    if (collider is PlayerController player)
+                    {
+                        GD.Print("Pew pew");
+                        isAttacking = true;
+                    }
+                }
             }
         }
     }
@@ -48,6 +66,7 @@ public partial class Turret : RigidBody2D
         GD.Print("body: " + body.Name + " has entered the detection radious");
         if (body is PlayerController)
         {
+            player = body as PlayerController;
             active = true;
         }
     }

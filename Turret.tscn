@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b1mn3pqyg13lu" path="res://platformer_metroidvania/enemies sprites/turret prototype/turretProto.png" id="2_vqnqr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_852nl"]
-radius = 64.68
+radius = 146.7
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pcp5s"]
 size = Vector2(12.5, 12)

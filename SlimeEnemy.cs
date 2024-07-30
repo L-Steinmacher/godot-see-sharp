@@ -29,41 +29,51 @@ public partial class SlimeEnemy : Enemy
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 
-	public override void _PhysicsProcess(double delta)
-	{
-        if ( Health > 0) {
+    public override void _PhysicsProcess(double delta)
+    {
+        if (Health > 0)
+        {
             velocity = Velocity;
-            if (!IsOnFloor()) {
+            if (!IsOnFloor())
+            {
                 velocity.Y += gravity * (float)delta;
             }
 
-            if (!animatedSprite.IsPlaying()){
+            if (!animatedSprite.IsPlaying())
+            {
                 animatedSprite.Play("Idle");
             }
 
-            if (idleTimer > 0) {
+            if (idleTimer > 0)
+            {
                 idleTimer -= delta;
             }
 
-            if ( idleTimer <= 0) {
-                float facingDirection = animatedSprite.FlipH ? 1: -1;
+            if (idleTimer <= 0)
+            {
+                float facingDirection = animatedSprite.FlipH ? 1 : -1;
                 // Sprite Found ledge
-                if (!bottomLeftRayCast.IsColliding() || !bottomRightRayCast.IsColliding()) {
+                if (!bottomLeftRayCast.IsColliding() || !bottomRightRayCast.IsColliding())
+                {
                     FlipCharacter();
                 }
 
-                else if (middleLeftRayCast.IsColliding()) {
+                else if (middleLeftRayCast.IsColliding())
+                {
                     object obj = middleLeftRayCast.GetCollider();
 
-                    if (obj.GetType().Name != "PlayerController") {
+                    if (obj.GetType().Name != "PlayerController")
+                    {
                         animatedSprite.FlipH = !animatedSprite.FlipH;
                         facingDirection = facingDirection * -1;
                     }
                 }
-                else if (middleRightRayCast.IsColliding()) {
+                else if (middleRightRayCast.IsColliding())
+                {
                     Object obj = middleRightRayCast.GetCollider();
 
-                    if (obj.GetType().Name != "PlayerController") {
+                    if (obj.GetType().Name != "PlayerController")
+                    {
                         animatedSprite.FlipH = !animatedSprite.FlipH;
                         facingDirection = facingDirection * -1;
                     }
@@ -75,24 +85,29 @@ public partial class SlimeEnemy : Enemy
             Velocity = velocity;
             MoveAndSlide();
         }
-	}
+    }
 
-    void FlipCharacter() {
-    animatedSprite.FlipH = !animatedSprite.FlipH;
-    facingDirection *= -1;
-}
+    void FlipCharacter()
+    {
+        animatedSprite.FlipH = !animatedSprite.FlipH;
+        facingDirection *= -1;
+    }
 
     public override void TakeDamage(int DamageTakenAmount)
     {
         Health -= DamageTakenAmount;
-        if (Health <= 0){
+        if (Health <= 0)
+        {
             animatedSprite.Play("Death");
         }
     }
 
-    private void _on_area_2d_body_entered(Node2D body) {
-        if (body is CharacterBody2D) {
-            if (body is PlayerController) {
+    private void _on_area_2d_body_entered(Node2D body)
+    {
+        if (body is CharacterBody2D)
+        {
+            if (body is PlayerController)
+            {
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(DamageDealtAmount);
 
@@ -100,13 +115,16 @@ public partial class SlimeEnemy : Enemy
         }
     }
 
-    private void _on_animated_sprite_2d_animation_finished() {
-        if (animatedSprite.Animation == "Death") {
+    private void _on_animated_sprite_2d_animation_finished()
+    {
+        if (animatedSprite.Animation == "Death")
+        {
             QueueFree();
         }
     }
 
-    private void _on_detection_body_entered(Node2D body) {
+    private void _on_detection_body_entered(Node2D body)
+    {
         GD.Print("Slime detected " + body.Name + " body,");
     }
 }

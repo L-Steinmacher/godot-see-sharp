@@ -66,9 +66,9 @@ public partial class PlayerController : CharacterBody2D
     {
         InterfaceManager.UpdateHealthBar(health, maxHealth);
         InterfaceManager.UpdateManaBar(mana, maxMana);
-        if (velocity.Y < 0){
+        if (velocity.Y < 0)
+        {
             animatedSprite2D.Play("Jump");
-            GD.Print("Jump");
         }
         else
             animatedSprite2D.Play("Fall");
@@ -102,7 +102,6 @@ public partial class PlayerController : CharacterBody2D
 
     private void InputManager(double delta)
     {
-
         if (health > 0 && !isAttacking)
         {
             velocity = Velocity;
@@ -149,7 +148,8 @@ public partial class PlayerController : CharacterBody2D
                 InteractWithObject();
             }
 
-            if (Input.IsActionJustPressed("cycle_attack")) {
+            if (Input.IsActionJustPressed("cycle_attack"))
+            {
                 GameManager.MagicController.CycleAttack();
             }
             facingDirection = ProcessMovement(ref velocity);
@@ -350,7 +350,6 @@ public partial class PlayerController : CharacterBody2D
     }
     private void ProcessMeleAttack()
     {
-
         if (!isAttacking)
         {
             isAttacking = true;
@@ -361,7 +360,8 @@ public partial class PlayerController : CharacterBody2D
     }
     public void TakeDamage(int damage)
     {
-        if (!isTakingDammage) {
+        if (!isTakingDammage)
+        {
             Velocity = new Vector2(-200 * facingDirection.X, -100);
             animatedSprite2D.Play("TakeDamage");
             CurrentState = PlayerState.TakingDamage;
@@ -431,7 +431,8 @@ public partial class PlayerController : CharacterBody2D
             isAttacking = false;
             CurrentState = PlayerState.Idle;
         }
-        if (animatedSprite2D.Animation == "TakeDamage") {
+        if (animatedSprite2D.Animation == "TakeDamage")
+        {
             isTakingDammage = false;
         }
     }

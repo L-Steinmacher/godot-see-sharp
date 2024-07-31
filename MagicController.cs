@@ -25,24 +25,18 @@ public partial class MagicController : Node
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
 
-        if (!facingDirection)
-        {
-            equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastRight").GlobalPosition;
-        }
-        else
-        {
-            equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastLeft").GlobalPosition;
-        }
+        equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>("SpellCastLeft").GlobalPosition;
         GameManager.GlobalGameManager.AddChild(equippedSpell);
-
         equippedSpell.CastSpell(facingDirection);
         GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
     }
 
-    public void CycleAttack () {
+    public void CycleAttack()
+    {
         int curIndex = AvSpells.IndexOf(EquippedSpell);
         curIndex += 1;
-        if (curIndex >= AvSpells.Count) {
+        if (curIndex >= AvSpells.Count)
+        {
             GD.Print("Cycle Attack");
             curIndex = 0;
         }

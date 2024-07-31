@@ -33,8 +33,8 @@ public partial class MeleAttack : Spell
 
     public void _on_area_2d_body_entered(Node2D body)
     {
-        // if (body is Ridg)
-        if (body is Enemy) {
+        if (body is Enemy)
+        {
             Enemy e = body as Enemy;
             e.TakeDamage(1);
         }

@@ -79,6 +79,7 @@ public partial class SlimeEnemy : Enemy
                     }
                 }
                 animatedSprite.Play("Walk");
+                // Mathf.Lerp(velocity.X, 0, Friction)
                 velocity.X = walkSpeed * facingDirection;
             }
 

@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using System.Linq;
+
 
 public partial class Turret : RigidBody2D
 {
@@ -19,7 +19,7 @@ public partial class Turret : RigidBody2D
         projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
+
     public override void _Process(double delta)
     {
         ProcessTimers(delta);
@@ -58,14 +58,12 @@ public partial class Turret : RigidBody2D
                     Node2D collider = result["collider"].As<Node2D>();
                     if (collider is PlayerController)
                     {
-                        // Marker2D projectileSpawn = GetNode<Marker2D>("ProjectileSpawn");
-                        // projectileSpawn.LookAt(player.Position);
                         projectileSpawn.LookAt(player.Position);
                         Projectile projectile = (Projectile)projectileScene.Instantiate();
                         Owner.AddChild(projectile);
-                        // Set the velocity of the projectile towards the player
+
                         Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
-                        projectile.velocity = direction * projectile.speed; // projectileSpeed should be defined as the speed you want
+                        projectile.velocity = direction * projectile.speed;
                         projectile.GlobalTransform = projectileSpawn.GlobalTransform;
                         GD.Print("Pew pew X: " + projectile.Transform.X);
                         isAttacking = true;
@@ -95,7 +93,6 @@ public partial class Turret : RigidBody2D
             player = body as PlayerController;
             active = true;
         }
-
     }
 
     private void _on_detection_radious_body_exited(Node2D body)

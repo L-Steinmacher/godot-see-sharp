@@ -8,17 +8,14 @@ public partial class Projectile : Node2D
     public int speed = 150;
     private double lifespan = 5;
     public Vector2 velocity { get; set; }
-    // Called when the node enters the scene tree for the first time.
+
     public override void _Ready()
     {
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
         lifespan -= delta;
-        // var t = Transform2D.Identity;
-        // Position += t.X * (float)(speed * delta);
         Position += velocity * (float)delta;
         if (lifespan <= 0)
         {
@@ -36,6 +33,11 @@ public partial class Projectile : Node2D
 
         if (body is CharacterBody2D)
         {
+            if (body is Enemy)
+            {
+                Enemy e = body as Enemy;
+                e.TakeDamage(damageDealtAmmount);
+            }
             if (body is PlayerController)
             {
                 PlayerController pc = body as PlayerController;

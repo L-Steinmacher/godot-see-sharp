@@ -296,7 +296,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["GameManager"]]
 position = Vector2(440, 62)
 script = ExtResource("1_3m6by")
 GhostPlayerInstance = ExtResource("2_hjew5")
@@ -311,7 +311,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"Fall"
+animation = &"Idle"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)
@@ -336,5 +336,4 @@ position = Vector2(16, 0)
 [node name="SpellCastLeft" type="Marker2D" parent="."]
 position = Vector2(-17, 0)
 
-[connection signal="Death" from="." to="." method="_on_death"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_animation_finished"]

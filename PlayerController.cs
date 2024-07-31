@@ -32,14 +32,15 @@ public partial class PlayerController : CharacterBody2D
     private double dashTimeReset = .3;
     private double dashCooldownTimer = 1;
     private double dashCooldownTimeReset = 1;
-    private double damageTimer = .2;
-    private double damageTimerReset = .2;
+    private double damageTimer = .3;
+    private double damageTimerReset = .3;
     public bool isAttacking = false;
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
     private double wallJumpTimeReset = .3;
     private bool canDoubleJump = true;
     private bool isDoubleJumping = false;
+    private bool isDead = false;
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     public float gravityReset = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
@@ -66,12 +67,12 @@ public partial class PlayerController : CharacterBody2D
     {
         InterfaceManager.UpdateHealthBar(health, maxHealth);
         InterfaceManager.UpdateManaBar(mana, maxMana);
-        if (velocity.Y < 0)
-        {
-            animatedSprite2D.Play("Jump");
-        }
-        else
-            animatedSprite2D.Play("Fall");
+        // if (velocity.Y < 0)
+        // {
+        //     animatedSprite2D.Play("Jump");
+        // }
+        // else
+        // animatedSprite2D.Play("Fall");
 
         ProcessTimers(delta);
         if (CurrentState != PlayerState.TakingDamage)
@@ -104,6 +105,14 @@ public partial class PlayerController : CharacterBody2D
     {
         if (health > 0 && !isAttacking)
         {
+            if (velocity.Y < 0)
+            {
+                animatedSprite2D.Play("Jump");
+            }
+            else
+            {
+                animatedSprite2D.Play("Fall");
+            }
             velocity = Velocity;
             // Add the gravity.
             if (!IsOnFloor())
@@ -360,7 +369,7 @@ public partial class PlayerController : CharacterBody2D
     }
     public void TakeDamage(int damage)
     {
-        if (!isTakingDammage)
+        if (!isTakingDammage && !isDead)
         {
             Velocity = new Vector2(-200 * facingDirection.X, -100);
             animatedSprite2D.Play("TakeDamage");
@@ -368,13 +377,13 @@ public partial class PlayerController : CharacterBody2D
             isTakingDammage = true;
             health -= damage;
             InterfaceManager.UpdateHealthBar(health, maxHealth);
-        }
-
-        if (health <= 0)
-        {
-            health = 0;
-            InterfaceManager.UpdateHealthBar(maxHealth, maxHealth);
-            animatedSprite2D.Play("Death");
+            if (health <= 0)
+            {
+                isDead = true;
+                health = 0;
+                InterfaceManager.UpdateHealthBar(maxHealth, maxHealth);
+                animatedSprite2D.Play("Death");
+            }
         }
     }
     public void UpdateMana(float amount)
@@ -391,6 +400,7 @@ public partial class PlayerController : CharacterBody2D
     }
     public void RespawnPlayer()
     {
+        isDead = false;
         Velocity = new Vector2(0, 0);
         health = maxHealth;
         animatedSprite2D.Play("Idle");

@@ -105,14 +105,6 @@ public partial class PlayerController : CharacterBody2D
     {
         if (health > 0 && !isAttacking)
         {
-            if (velocity.Y < 0)
-            {
-                animatedSprite2D.Play("Jump");
-            }
-            else
-            {
-                animatedSprite2D.Play("Fall");
-            }
             velocity = Velocity;
             // Add the gravity.
             if (!IsOnFloor())
@@ -162,7 +154,6 @@ public partial class PlayerController : CharacterBody2D
                 GameManager.MagicController.CycleAttack();
             }
             facingDirection = ProcessMovement(ref velocity);
-
             Velocity = velocity;
             MoveAndSlide();
         }
@@ -213,9 +204,7 @@ public partial class PlayerController : CharacterBody2D
     {
         if (velocity.X < 5 && velocity.X > -5 && health > 0 && !isAttacking)
         {
-
             animatedSprite2D.Play("Idle");
-
         }
         velocity.X = Mathf.Lerp(velocity.X, 0, Friction);
     }
@@ -266,10 +255,7 @@ public partial class PlayerController : CharacterBody2D
             }
         }
 
-        if (velocity.X < 10 && velocity.X > -10)
-        {
-            isTakingDammage = false;
-        }
+
         return direction;
     }
 
@@ -313,12 +299,14 @@ public partial class PlayerController : CharacterBody2D
 
     private Vector2 ProcessJump(Vector2 velocity)
     {
-        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        bool IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        var tileMap = GetNode<TileMap>("TileMap");
+        bool isTileSet = GetNode<RayCast2D>("LeftRayCast2D").GetCollider() == tileMap || GetNode<RayCast2D>("RightRayCast2D").GetCollider() == tileMap;
         if (!IsOnFloor())
         {
             if (!isWallJumping)
             {
-                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
+                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding() && isTileSet)
                 {
                     animatedSprite2D.FlipH = false;
                     velocity.Y = WallJumpVerticalVelocity;
@@ -333,9 +321,13 @@ public partial class PlayerController : CharacterBody2D
                     isWallJumping = true;
                 }
             }
-            if (!IsColliding && canDoubleJump && !isDoubleJumping)
+            if (velocity.Y < 0 && !isDoubleJumping)
             {
-                if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
+                animatedSprite2D.Play("Jump");
+            }
+            else if (!IsColliding && canDoubleJump && !isDoubleJumping)
+            {
+                if (Input.IsActionJustPressed("jump"))
                 {
                     JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
                     Owner.AddChild(je);
@@ -346,12 +338,16 @@ public partial class PlayerController : CharacterBody2D
                     animatedSprite2D.Play("DoubleJump");
                 }
             }
+            else
+            {
+                animatedSprite2D.Play("Fall");
+            }
         }
         else
         {
             JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
             Owner.AddChild(je);
-            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
+            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
             je.Liftoff();
             velocity.Y = JumpVelocity;
         }

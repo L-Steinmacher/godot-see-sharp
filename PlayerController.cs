@@ -300,13 +300,17 @@ public partial class PlayerController : CharacterBody2D
     private Vector2 ProcessJump(Vector2 velocity)
     {
         bool IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
-        var tileMap = GetNode<TileMap>("TileMap");
-        bool isTileSet = GetNode<RayCast2D>("LeftRayCast2D").GetCollider() == tileMap || GetNode<RayCast2D>("RightRayCast2D").GetCollider() == tileMap;
+        /*
+        TODO: We need to add a check to see if the collider is the TileMap so we don't get any funkey buisness going on
+        like jumping off of projectiles or enemies. Something like bellow but that shit is scuffed.
+        It both throws an error and gives any developer a headache to look at.
+        bool isTileMap = GetNode<RayCast2D>("LeftRayCast2D").GetCollider().GetType().Name == "TileMap" || GetNode<RayCast2D>("RightRayCast2D").GetCollider().GetType().Name == "TileMap";
+        **/
         if (!IsOnFloor())
         {
             if (!isWallJumping)
             {
-                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding() && isTileSet)
+                if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = false;
                     velocity.Y = WallJumpVerticalVelocity;

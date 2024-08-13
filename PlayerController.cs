@@ -30,11 +30,11 @@ public partial class PlayerController : CharacterBody2D
     * refactor these 16f and all units to use global unit based on the pixel width of a tile, which is 16 pixels.
     * We should create a singleton to contain all global units and variables.
     */
-    public float minJumpHeight = 16f * .8f;
-    public float maxJumpHeight = 16f * 5f;
+    public float minJumpHeight = Globals.UNIT_SIZE * .8f;
+    public float maxJumpHeight = Globals.UNIT_SIZE * 5f;
     private float jumpDuration = 0.5f;
-    public const float Speed = 16f * 10f;
-    public const float WallJumpVerticalVelocity = -300.0f;
+    public const float Speed = Globals.UNIT_SIZE * 10f;
+    public const float WallJumpVerticalVelocity = Globals.UNIT_SIZE * -5;
     private bool isDashing = false;
     private bool canDash = true;
     private double dashTimer = .3;
@@ -142,57 +142,7 @@ public partial class PlayerController : CharacterBody2D
 
             if (Input.IsActionJustPressed("jump"))
             {
-                // velocity = ProcessJump(velocity);
-                var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
-                if (!IsOnFloor())
-                {
-                    if (velocity.Y < 0)
-                    {
-                        animatedSprite2D.Play("Jump");
-                    }
-                    else
-                    {
-                        animatedSprite2D.Play("Fall");
-                    }
-                    if (!isWallJumping)
-                    {
-                        if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
-                        {
-                            animatedSprite2D.FlipH = false;
-                            velocity.Y = WallJumpVerticalVelocity;
-                            velocity.X = -minJumpVelocity;
-                            isWallJumping = true;
-                        }
-                        if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
-                        {
-                            animatedSprite2D.FlipH = true;
-                            velocity.Y = WallJumpVerticalVelocity;
-                            velocity.X = minJumpVelocity;
-                            isWallJumping = true;
-                        }
-                    }
-                    if (!IsColliding && canDoubleJump && !isDoubleJumping)
-                    {
-                        if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
-                        {
-                            JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
-                            Owner.AddChild(je);
-                            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
-                            je.Liftoff();
-                            velocity.Y = minJumpVelocity;
-                            isDoubleJumping = true;
-                            animatedSprite2D.Play("DoubleJump");
-                        }
-                    }
-                }
-                else
-                {
-                    JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
-                    Owner.AddChild(je);
-                    je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
-                    je.Liftoff();
-                    velocity.Y = maxJumpVelocity;
-                }
+                velocity = ProcessJump(velocity);
             }
             if (Input.IsActionJustReleased("jump") && velocity.Y < minJumpVelocity)
             {
@@ -374,14 +324,14 @@ public partial class PlayerController : CharacterBody2D
                 {
                     animatedSprite2D.FlipH = false;
                     velocity.Y = WallJumpVerticalVelocity;
-                    velocity.X = -minJumpVelocity;
+                    velocity.X = -maxJumpVelocity;
                     isWallJumping = true;
                 }
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = true;
                     velocity.Y = WallJumpVerticalVelocity;
-                    velocity.X = minJumpVelocity;
+                    velocity.X = maxJumpVelocity;
                     isWallJumping = true;
                 }
             }
@@ -393,7 +343,7 @@ public partial class PlayerController : CharacterBody2D
                     Owner.AddChild(je);
                     je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
                     je.Liftoff();
-                    velocity.Y = minJumpVelocity;
+                    velocity.Y = maxJumpVelocity;
                     isDoubleJumping = true;
                     animatedSprite2D.Play("DoubleJump");
                 }

@@ -23,8 +23,17 @@ public partial class PlayerController : CharacterBody2D
     public const float DashGravity = 0.0f;
     private const float DashSpeed = 500.0f;
     private const float Friction = 0.3f;
-    public const float JumpVelocity = -400.0f;
-    public const float Speed = 300.0f;
+    public float minJumpVelocity;
+    public float maxJumpVelocity;
+    /**
+    * TODO:
+    * refactor these 16f and all units to use global unit based on the pixel width of a tile, which is 16 pixels.
+    * We should create a singleton to contain all global units and variables.
+    */
+    public float minJumpHeight = 16f * .8f;
+    public float maxJumpHeight = 16f * 5f;
+    private float jumpDuration = 0.5f;
+    public const float Speed = 16f * 10f;
     public const float WallJumpVerticalVelocity = -300.0f;
     private bool isDashing = false;
     private bool canDash = true;
@@ -61,18 +70,14 @@ public partial class PlayerController : CharacterBody2D
     {
         animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         GameManager.Player = this;
+        minJumpVelocity = -MathF.Sqrt(2 * gravity * minJumpHeight);
+        maxJumpVelocity = -MathF.Sqrt(2 * gravity * maxJumpHeight);
     }
 
     public override void _PhysicsProcess(double delta)
     {
         InterfaceManager.UpdateHealthBar(health, maxHealth);
         InterfaceManager.UpdateManaBar(mana, maxMana);
-        // if (velocity.Y < 0)
-        // {
-        //     animatedSprite2D.Play("Jump");
-        // }
-        // else
-        // animatedSprite2D.Play("Fall");
 
         ProcessTimers(delta);
         if (CurrentState != PlayerState.TakingDamage)
@@ -137,7 +142,61 @@ public partial class PlayerController : CharacterBody2D
 
             if (Input.IsActionJustPressed("jump"))
             {
-                velocity = ProcessJump(velocity);
+                // velocity = ProcessJump(velocity);
+                var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+                if (!IsOnFloor())
+                {
+                    if (velocity.Y < 0)
+                    {
+                        animatedSprite2D.Play("Jump");
+                    }
+                    else
+                    {
+                        animatedSprite2D.Play("Fall");
+                    }
+                    if (!isWallJumping)
+                    {
+                        if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
+                        {
+                            animatedSprite2D.FlipH = false;
+                            velocity.Y = WallJumpVerticalVelocity;
+                            velocity.X = -minJumpVelocity;
+                            isWallJumping = true;
+                        }
+                        if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
+                        {
+                            animatedSprite2D.FlipH = true;
+                            velocity.Y = WallJumpVerticalVelocity;
+                            velocity.X = minJumpVelocity;
+                            isWallJumping = true;
+                        }
+                    }
+                    if (!IsColliding && canDoubleJump && !isDoubleJumping)
+                    {
+                        if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
+                        {
+                            JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
+                            Owner.AddChild(je);
+                            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
+                            je.Liftoff();
+                            velocity.Y = minJumpVelocity;
+                            isDoubleJumping = true;
+                            animatedSprite2D.Play("DoubleJump");
+                        }
+                    }
+                }
+                else
+                {
+                    JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
+                    Owner.AddChild(je);
+                    je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
+                    je.Liftoff();
+                    velocity.Y = maxJumpVelocity;
+                }
+            }
+            if (Input.IsActionJustReleased("jump") && velocity.Y < minJumpVelocity)
+            {
+                velocity.Y = minJumpVelocity;
             }
             if (Input.IsActionJustPressed("dash"))
             {
@@ -194,7 +253,6 @@ public partial class PlayerController : CharacterBody2D
                 isDashing = false;
                 dashTimer = dashTimeReset;
                 Velocity = new Vector2(0, 0);
-                // velocity.Y = gravity;
                 CurrentState = PlayerState.Idle;
                 gravity = gravityReset;
             }
@@ -299,61 +357,55 @@ public partial class PlayerController : CharacterBody2D
 
     private Vector2 ProcessJump(Vector2 velocity)
     {
-        bool IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
-        /*
-        TODO: We need to add a check to see if the collider is the TileMap so we don't get any funkey buisness going on
-        like jumping off of projectiles or enemies. Something like bellow but that shit is scuffed.
-        It both throws an error and gives any developer a headache to look at.
-        bool isTileMap = GetNode<RayCast2D>("LeftRayCast2D").GetCollider().GetType().Name == "TileMap" || GetNode<RayCast2D>("RightRayCast2D").GetCollider().GetType().Name == "TileMap";
-        **/
+        var IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
         if (!IsOnFloor())
         {
+            if (velocity.Y < 0)
+            {
+                animatedSprite2D.Play("Jump");
+            }
+            else
+            {
+                animatedSprite2D.Play("Fall");
+            }
             if (!isWallJumping)
             {
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = false;
                     velocity.Y = WallJumpVerticalVelocity;
-                    velocity.X = -JumpVelocity;
+                    velocity.X = -minJumpVelocity;
                     isWallJumping = true;
                 }
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = true;
                     velocity.Y = WallJumpVerticalVelocity;
-                    velocity.X = JumpVelocity;
+                    velocity.X = minJumpVelocity;
                     isWallJumping = true;
                 }
             }
-            if (velocity.Y < 0 && !isDoubleJumping)
+            if (!IsColliding && canDoubleJump && !isDoubleJumping)
             {
-                animatedSprite2D.Play("Jump");
-            }
-            else if (!IsColliding && canDoubleJump && !isDoubleJumping)
-            {
-                if (Input.IsActionJustPressed("jump"))
+                if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
                 {
                     JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
                     Owner.AddChild(je);
                     je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
                     je.Liftoff();
-                    velocity.Y = JumpVelocity;
+                    velocity.Y = minJumpVelocity;
                     isDoubleJumping = true;
                     animatedSprite2D.Play("DoubleJump");
                 }
-            }
-            else
-            {
-                animatedSprite2D.Play("Fall");
             }
         }
         else
         {
             JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
             Owner.AddChild(je);
-            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
+            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
             je.Liftoff();
-            velocity.Y = JumpVelocity;
+            velocity.Y = maxJumpVelocity;
         }
         return velocity;
     }

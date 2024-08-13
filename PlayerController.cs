@@ -195,7 +195,7 @@ public partial class PlayerController : CharacterBody2D
             dashCooldownTimer -= delta;
             GhostPlayer ghostPlayer = GhostPlayerInstance.Instantiate() as GhostPlayer;
             Owner.AddChild(ghostPlayer);
-            ghostPlayer.GlobalPosition = this.GlobalPosition;
+            ghostPlayer.GlobalPosition = GlobalPosition;
             ghostPlayer.SetHValue(animatedSprite2D.FlipH);
 
             if (dashTimer <= 0)
@@ -341,7 +341,7 @@ public partial class PlayerController : CharacterBody2D
                 {
                     JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
                     Owner.AddChild(je);
-                    je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
+                    je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
                     je.Liftoff();
                     velocity.Y = maxJumpVelocity;
                     isDoubleJumping = true;
@@ -353,7 +353,7 @@ public partial class PlayerController : CharacterBody2D
         {
             JumpEffects je = JumpEffectsInstance.Instantiate() as JumpEffects;
             Owner.AddChild(je);
-            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = this.GlobalPosition;
+            je.GetNode<AnimatedSprite2D>("AnimatedSprite2D").GlobalPosition = GlobalPosition;
             je.Liftoff();
             velocity.Y = maxJumpVelocity;
         }

@@ -1,39 +1,42 @@
 using Godot;
 using System;
 
-public partial class Battie : CharacterBody2D
+public partial class Battie : Enemy
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
+    public const float Speed = 300.0f;
+    public const float JumpVelocity = -400.0f;
+    private AnimatedSprite2D animatedSprite2D;
 
-	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    public override void _Ready()
+    {
+        Health = 2;
+        DamageDealtAmount = 1;
+        animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    }
 
-	public override void _PhysicsProcess(double delta)
-	{
-		Vector2 velocity = Velocity;
+    public override void _PhysicsProcess(double delta)
+    {
+        Vector2 velocity = Velocity;
+        // Implement all this shit
+        Velocity = velocity;
+        MoveAndSlide();
+    }
 
-		// Add the gravity.
-		if (!IsOnFloor())
-			velocity.Y += gravity * (float)delta;
+    public override void TakeDamage(int DamageTakenAmount)
+    {
+        Health -= DamageDealtAmount;
+        if (Health <= 0)
+        {
+            animatedSprite2D.Play("Death");
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-			velocity.Y = JumpVelocity;
+        }
+    }
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X = direction.X * Speed;
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-		}
-
-		Velocity = velocity;
-		MoveAndSlide();
-	}
+    private void _on_animated_sprite_2d_animation_finished()
+    {
+        if (animatedSprite2D.Animation == "Death")
+        {
+            QueueFree();
+        }
+    }
 }

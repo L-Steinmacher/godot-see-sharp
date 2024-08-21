@@ -77,7 +77,7 @@ public partial class Turret : Enemy
                         Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
                         projectile.velocity = direction * projectile.speed;
                         projectile.GlobalTransform = projectileSpawn.GlobalTransform;
-                        GD.Print("Pew pew X: " + projectile.Transform.X);
+                        // GD.Print("Pew pew X: " + projectile.Transform.X);
                         isAttacking = true;
                     }
                 }

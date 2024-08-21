@@ -29,4 +29,5 @@ shape = SubResource("RectangleShape2D_pcp5s")
 position = Vector2(-6, -1)
 
 [connection signal="body_entered" from="DetectionRadious" to="." method="_on_detection_radious_body_entered"]
+[connection signal="body_exited" from="DetectionRadious" to="." method="_on_detection_radious_body_exited"]
 [connection signal="body_shape_entered" from="DetectionRadious" to="." method="_on_detection_radious_body_shape_entered"]

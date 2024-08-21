@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 
-public partial class Turret : RigidBody2D
+public partial class Turret : Enemy
 {
     private double attackCooldown = 1.5;
     private double attackCooldownReset = 1.5;
@@ -15,6 +15,8 @@ public partial class Turret : RigidBody2D
 
     public override void _Ready()
     {
+        Health = 1;
+        DamageDealtAmount = 1;
         sprite = GetNode<Sprite2D>("Sprite2D");
         projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
     }
@@ -24,6 +26,15 @@ public partial class Turret : RigidBody2D
     {
         ProcessTimers(delta);
         ProcessAttack();
+    }
+
+    public override void TakeDamage(int DamageAmount)
+    {
+        Health -= DamageAmount;
+        if (Health <= 0)
+        {
+            QueueFree();
+        }
     }
 
     private void ProcessAttack()
@@ -61,6 +72,7 @@ public partial class Turret : RigidBody2D
                         projectileSpawn.LookAt(player.Position);
                         Projectile projectile = (Projectile)projectileScene.Instantiate();
                         Owner.AddChild(projectile);
+                        projectile.shooter = this;
 
                         Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
                         projectile.velocity = direction * projectile.speed;

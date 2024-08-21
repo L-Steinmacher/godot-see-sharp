@@ -706,16 +706,16 @@ show_percentage = false
 position = Vector2(240, 190)
 metadata/_edit_group_ = true
 
-[node name="Turret" parent="." instance=ExtResource("10_gb16f")]
-position = Vector2(659, 177)
-
-[node name="Turret2" parent="." instance=ExtResource("10_gb16f")]
-position = Vector2(622, 145)
-rotation = 3.14159
-gravity_scale = 0.0
-
 [node name="Battie" parent="." instance=ExtResource("11_55f7v")]
 position = Vector2(374, 172)
+
+[node name="Turret" parent="." instance=ExtResource("10_gb16f")]
+position = Vector2(630, 177)
+
+[node name="Turret2" parent="." instance=ExtResource("10_gb16f")]
+position = Vector2(614, 145)
+rotation = 3.14159
+motion_mode = 1
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="Spikes/Area2D" to="Spikes" method="_on_area_2d_body_entered"]

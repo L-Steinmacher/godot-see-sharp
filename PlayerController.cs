@@ -1,7 +1,5 @@
 using Godot;
 using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 public partial class PlayerController : CharacterBody2D
 {
@@ -25,11 +23,6 @@ public partial class PlayerController : CharacterBody2D
     private const float Friction = 0.3f;
     public float minJumpVelocity;
     public float maxJumpVelocity;
-    /**
-    * TODO:
-    * refactor these 16f and all units to use global unit based on the pixel width of a tile, which is 16 pixels.
-    * We should create a singleton to contain all global units and variables.
-    */
     public float minJumpHeight = Globals.UNIT_SIZE * .8f;
     public float maxJumpHeight = Globals.UNIT_SIZE * 5f;
     private float jumpDuration = 0.5f;

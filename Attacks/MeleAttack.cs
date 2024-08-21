@@ -22,7 +22,6 @@ public partial class MeleAttack : Spell
     public override void CastSpell(bool faceDirection)
     {
         animatedSprite.FlipH = faceDirection;
-
         animatedSprite.Play("Cast");
     }
 

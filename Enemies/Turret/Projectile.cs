@@ -8,6 +8,7 @@ public partial class Projectile : Node2D
     public int speed = 150;
     private double lifespan = 5;
     public Vector2 velocity { get; set; }
+    public Turret shooter;
 
     public override void _Ready()
     {
@@ -30,7 +31,7 @@ public partial class Projectile : Node2D
 
     private void _on_area_2d_body_entered(Node2D body)
     {
-
+        if (body == shooter) return;
         if (body is CharacterBody2D)
         {
             if (body is Enemy)

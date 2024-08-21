@@ -24,7 +24,6 @@ public partial class MagicController : Node
     public void CastSpell(bool facingDirection)
     {
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
-        GD.Print(facingDirection);
         string rayCastDirection = facingDirection ? "SpellCastLeft" : "SpellCastRight";
         equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>(rayCastDirection).GlobalPosition;
         GameManager.GlobalGameManager.AddChild(equippedSpell);

@@ -13,12 +13,15 @@ public partial class Battie : Enemy
     }
 
     public EnemyState CurrentState { get; set; } = EnemyState.Patrolling;
-    public const float Speed = 2.0f;
+    public const float Speed = 80.0f;
+    private const float AttackSpeed = 110.0f;
 
     private AnimatedSprite2D _animatedSprite2D;
+    private float _frequency = 2.0f;
     private float _timeElapsed = 0.0f;
     private float _figure8Width = 50.0f;
     private float _figure8Height = 25.0f;
+    private PlayerController player;
 
     public override void _Ready()
     {
@@ -42,6 +45,7 @@ public partial class Battie : Enemy
             case EnemyState.TakingDamage:
                 break;
             case EnemyState.Chasing:
+                velocity = ProcessChasing();
                 break;
             case EnemyState.Attacking:
                 break;
@@ -51,19 +55,27 @@ public partial class Battie : Enemy
 
         Velocity = velocity;
         MoveAndSlide();
-
-        Vector2 ProcessPatrolling(double delta)
-        {
-            Vector2 velocity;
-            _timeElapsed += (float)delta;
-            float x = _figure8Width * Mathf.Sin(_timeElapsed);
-            float y = _figure8Height * Mathf.Cos(_timeElapsed * 2);
-
-            velocity = new Vector2(x, y);
-            return velocity;
-        }
     }
 
+    private Vector2 ProcessPatrolling(double delta)
+    {
+        Vector2 velocity;
+        _timeElapsed += (float)delta;
+        float x = _figure8Width * Mathf.Sin(_timeElapsed);
+        float y = _figure8Height * Mathf.Cos(_timeElapsed * _frequency);
+
+        velocity = new Vector2(x, y);
+        return velocity;
+    }
+
+    private Vector2 ProcessChasing()
+    {
+        Vector2 velocity;
+        player = GameManager.Player;
+        var playerPosition = player.Position;
+        velocity = Position.DirectionTo(playerPosition) * Speed;
+        return velocity;
+    }
 
     public override void TakeDamage(int damageTakenAmount)
     {
@@ -79,6 +91,25 @@ public partial class Battie : Enemy
         else
         {
             CurrentState = previousState;
+        }
+    }
+
+    private void _on_detection_radius_body_entered(Node2D body)
+    {
+        if (body is PlayerController)
+        {
+            PlayerController pc = body as PlayerController;
+            GD.Print("Battie detects: " + pc.Name);
+            CurrentState = EnemyState.Chasing;
+        }
+    }
+
+    private void _on_detection_radius_body_exited(Node2D body)
+    {
+        GD.Print("body: " + body.Name + " has exited the detection radious of battie");
+        if (body is PlayerController)
+        {
+            CurrentState = EnemyState.Patrolling;
         }
     }
 

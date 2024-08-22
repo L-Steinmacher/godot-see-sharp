@@ -270,7 +270,7 @@ target_position = Vector2(-8, 0)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_siy5j")
-animation = &"Walk"
+animation = &"TakeDamage"
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 

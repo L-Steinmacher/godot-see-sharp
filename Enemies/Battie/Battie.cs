@@ -10,10 +10,11 @@ public partial class Battie : Enemy
         Chasing,
         Attacking,
         TakingDamage,
+        Dead,
     }
 
-    public EnemyState CurrentState { get; set; } = EnemyState.Patrolling;
-    public const float Speed = 80.0f;
+    public EnemyState CurrentState { get; set; }
+    public const float Speed = 25.0f;
     private const float AttackSpeed = 110.0f;
 
     private AnimatedSprite2D _animatedSprite2D;
@@ -27,6 +28,7 @@ public partial class Battie : Enemy
     {
         Health = 2;
         DamageDealtAmount = 1;
+        CurrentState = EnemyState.Patrolling;
         _animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
     }
 
@@ -43,11 +45,15 @@ public partial class Battie : Enemy
                 velocity = ProcessPatrolling(delta);
                 break;
             case EnemyState.TakingDamage:
+                velocity = new Vector2(0, 0);
                 break;
             case EnemyState.Chasing:
                 velocity = ProcessChasing();
                 break;
             case EnemyState.Attacking:
+                break;
+            case EnemyState.Dead:
+                _animatedSprite2D.Play("Death");
                 break;
             default:
                 break;
@@ -79,19 +85,14 @@ public partial class Battie : Enemy
 
     public override void TakeDamage(int damageTakenAmount)
     {
-        EnemyState previousState = CurrentState;
-        CurrentState = EnemyState.TakingDamage;
-
         Health -= damageTakenAmount;
+        CurrentState = EnemyState.TakingDamage;
 
         if (Health <= 0)
         {
             _animatedSprite2D.Play("Death");
         }
-        else
-        {
-            CurrentState = previousState;
-        }
+        else { _animatedSprite2D.Play("TakeDamage"); }
     }
 
     private void _on_detection_radius_body_entered(Node2D body)
@@ -106,7 +107,7 @@ public partial class Battie : Enemy
 
     private void _on_detection_radius_body_exited(Node2D body)
     {
-        GD.Print("body: " + body.Name + " has exited the detection radious of battie");
+        GD.Print("body: " + body.Name + " has exited the detection radius of battie");
         if (body is PlayerController)
         {
             CurrentState = EnemyState.Patrolling;
@@ -118,6 +119,10 @@ public partial class Battie : Enemy
         if (_animatedSprite2D.Animation == "Death")
         {
             QueueFree();
+        }
+        if (_animatedSprite2D.Animation == "TakeDamage")
+        {
+            CurrentState = EnemyState.Patrolling;
         }
     }
 }

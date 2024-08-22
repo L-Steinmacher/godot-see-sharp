@@ -101,6 +101,10 @@ public partial class SlimeEnemy : Enemy
         {
             animatedSprite.Play("Death");
         }
+        else
+        {
+            animatedSprite.Play("TakeDamage");
+        }
     }
 
     private void _on_area_2d_body_entered(Node2D body)
@@ -111,7 +115,6 @@ public partial class SlimeEnemy : Enemy
             {
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(DamageDealtAmount);
-
             }
         }
     }

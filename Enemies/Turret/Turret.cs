@@ -52,7 +52,7 @@ public partial class Turret : Enemy
             }
             if (!isAttacking)
             {
-                // Godot Intersect Ray requires this layout
+                // Godot Intersect Ray requires this layout. SO DONT CHANGE IT!!!
                 var queryParameters = new PhysicsRayQueryParameters2D
                 {
                     From = Position,
@@ -97,9 +97,9 @@ public partial class Turret : Enemy
             }
         }
     }
-    private void _on_detection_radious_body_entered(Node2D body)
+    private void _on_detection_radius_body_entered(Node2D body)
     {
-        GD.Print("body: " + body.Name + " has entered the detection radious");
+        // GD.Print("body: " + body.Name + " has entered the detection radious");
         if (body is PlayerController)
         {
             player = body as PlayerController;
@@ -107,9 +107,9 @@ public partial class Turret : Enemy
         }
     }
 
-    private void _on_detection_radious_body_exited(Node2D body)
+    private void _on_detection_radius_body_exited(Node2D body)
     {
-        GD.Print("body: " + body.Name + " has exited the detection radious");
+        // GD.Print("body: " + body.Name + " has exited the detection radious");
         if (body is PlayerController)
         {
             active = false;

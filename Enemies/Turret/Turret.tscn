@@ -15,9 +15,9 @@ script = ExtResource("1_jmp6v")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_5m56i")
 
-[node name="DetectionRadious" type="Area2D" parent="."]
+[node name="DetectionRadius" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadious"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadius"]
 position = Vector2(-0.5, 2.5)
 shape = SubResource("CircleShape2D_852nl")
 
@@ -28,6 +28,5 @@ shape = SubResource("RectangleShape2D_pcp5s")
 [node name="ProjectileSpawn" type="Marker2D" parent="."]
 position = Vector2(-6, -1)
 
-[connection signal="body_entered" from="DetectionRadious" to="." method="_on_detection_radious_body_entered"]
-[connection signal="body_exited" from="DetectionRadious" to="." method="_on_detection_radious_body_exited"]
-[connection signal="body_shape_entered" from="DetectionRadious" to="." method="_on_detection_radious_body_shape_entered"]
+[connection signal="body_entered" from="DetectionRadius" to="." method="_on_detection_radius_body_entered"]
+[connection signal="body_exited" from="DetectionRadius" to="." method="_on_detection_radius_body_exited"]

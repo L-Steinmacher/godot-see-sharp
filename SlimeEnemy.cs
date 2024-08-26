@@ -115,6 +115,7 @@ public partial class SlimeEnemy : Enemy
             {
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(DamageDealtAmount);
+                FlipCharacter();
             }
         }
     }

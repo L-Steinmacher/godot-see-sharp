@@ -34,7 +34,6 @@ public partial class Battie : Enemy
 
     public override void _PhysicsProcess(double delta)
     {
-        _animatedSprite2D.Play("Idle");
         Vector2 velocity = Velocity;
 
         switch (CurrentState)
@@ -42,10 +41,10 @@ public partial class Battie : Enemy
             case EnemyState.Idle:
                 break;
             case EnemyState.Patrolling:
+                _animatedSprite2D.Play("Idle");
                 velocity = ProcessPatrolling(delta);
                 break;
             case EnemyState.TakingDamage:
-                velocity = new Vector2(0, 0);
                 break;
             case EnemyState.Chasing:
                 velocity = ProcessChasing();
@@ -86,13 +85,13 @@ public partial class Battie : Enemy
     public override void TakeDamage(int damageTakenAmount)
     {
         Health -= damageTakenAmount;
-        CurrentState = EnemyState.TakingDamage;
-
+        // CurrentState = EnemyState.TakingDamage;
+        Velocity = new Vector2(0, 0);
+        _animatedSprite2D.Play("TakeDamage");
         if (Health <= 0)
         {
-            _animatedSprite2D.Play("Death");
+            CurrentState = EnemyState.Dead;
         }
-        else { _animatedSprite2D.Play("TakeDamage"); }
     }
 
     private void _on_detection_radius_body_entered(Node2D body)

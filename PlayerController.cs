@@ -27,7 +27,7 @@ public partial class PlayerController : CharacterBody2D
     public float maxJumpHeight = Globals.UNIT_SIZE * 5f;
     private float jumpDuration = 0.5f;
     public const float Speed = Globals.UNIT_SIZE * 10f;
-    public const float WallJumpVerticalVelocity = Globals.UNIT_SIZE * -5;
+    public const float WallJumpVerticalVelocity = Globals.UNIT_SIZE * -10;
     private bool isDashing = false;
     private bool canDash = true;
     private double dashTimer = .3;
@@ -316,14 +316,14 @@ public partial class PlayerController : CharacterBody2D
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("LeftRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = false;
-                    velocity.Y = WallJumpVerticalVelocity;
+                    velocity.Y = maxJumpVelocity;
                     velocity.X = -maxJumpVelocity;
                     isWallJumping = true;
                 }
                 if (Input.IsActionJustPressed("jump") && GetNode<RayCast2D>("RightRayCast2D").IsColliding())
                 {
                     animatedSprite2D.FlipH = true;
-                    velocity.Y = WallJumpVerticalVelocity;
+                    velocity.Y = maxJumpVelocity;
                     velocity.X = maxJumpVelocity;
                     isWallJumping = true;
                 }

@@ -7,14 +7,12 @@
 size = Vector2(13.5, 14)
 
 [node name="Spikes" type="Node2D"]
-position = Vector2(475, 175)
 script = ExtResource("1_xhyd2")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0.132431, -0.099325)
 rotation = 3.14159
-scale = Vector2(0.983446, 0.987584)
+scale = Vector2(1, 1.005)
 texture = ExtResource("2_snwr0")
 
 [node name="Area2D" type="Area2D" parent="."]

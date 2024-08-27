@@ -1,6 +1,6 @@
 [gd_scene load_steps=39 format=3 uid="uid://bknv87ke7xyvy"]
 
-[ext_resource type="Script" path="res://SlimeEnemy.cs" id="1_c7dlc"]
+[ext_resource type="Script" path="res://Enemies/Slime/SlimeEnemy.cs" id="1_c7dlc"]
 [ext_resource type="Texture2D" uid="uid://dxl0kwdkqesdv" path="res://platformer_metroidvania/enemies sprites/slime/slime_idle_anim_strip_5.png" id="1_obssq"]
 [ext_resource type="Texture2D" uid="uid://dah6c2qk6xqcc" path="res://platformer_metroidvania/enemies sprites/slime/slime_death_anim_strip_6.png" id="2_wggqf"]
 [ext_resource type="Texture2D" uid="uid://dvgu0ee42so0k" path="res://platformer_metroidvania/enemies sprites/slime/slime_hit_anim_strip_3.png" id="4_0le1i"]

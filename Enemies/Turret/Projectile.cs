@@ -6,7 +6,7 @@ public partial class Projectile : Node2D
     private int damageDealtAmmount = 1;
     public string ResourcePath = "res://Enemies/Turret/Projectile.tscn";
     public int speed = 150;
-    private double lifespan = 5;
+    private double lifespan = 3;
     public Vector2 velocity { get; set; }
     public Turret shooter;
 
@@ -44,6 +44,10 @@ public partial class Projectile : Node2D
                 PlayerController pc = body as PlayerController;
                 pc.TakeDamage(damageDealtAmmount);
             }
+            QueueFree();
+        }
+        if (body is TileMapLayer)
+        {
             QueueFree();
         }
     }

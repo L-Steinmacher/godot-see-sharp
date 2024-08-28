@@ -9,6 +9,7 @@ public partial class Turret : Enemy
     private bool isAttacking = false;
     private bool active;
     private Sprite2D sprite;
+    private Sprite2D turretHead;
     private PlayerController player;
     [Export]
     public PackedScene projectileScene;
@@ -18,6 +19,7 @@ public partial class Turret : Enemy
         Health = 1;
         DamageDealtAmount = 1;
         sprite = GetNode<Sprite2D>("Sprite2D");
+        turretHead = GetNode<Sprite2D>("TurretHeadSprite2D");
         projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
     }
 
@@ -42,15 +44,25 @@ public partial class Turret : Enemy
         if (active)
         {
             var angle = GlobalPosition.AngleToPoint(player.GlobalPosition);
-            if (Mathf.Abs(angle) > Mathf.Pi / 2)
+            bool playerInFrontOfTurret = Mathf.Abs(angle) > Mathf.Pi / 2;
+            // if (Mathf.Abs(angle) > Mathf.Pi / 2)
+            // {
+            //     sprite.FlipH = false;
+            //     turretHead.FlipH = false;
+            // }
+            // else
+            // {
+            //     sprite.FlipH = true;
+            //     turretHead.FlipH = true;
+            // }
+            if (playerInFrontOfTurret)
             {
-                sprite.FlipH = false;
+                turretHead.FlipH = playerInFrontOfTurret;
+                turretHead.FlipV = playerInFrontOfTurret;
+                //  TODO have the head slowly track the player and stop tracking when about to fire and wait till fire animation is finished.
+                turretHead.LookAt(player.GlobalPosition);
             }
-            else
-            {
-                sprite.FlipH = true;
-            }
-            if (!isAttacking)
+            if (playerInFrontOfTurret && !isAttacking)
             {
                 // Godot Intersect Ray requires this layout. SO DONT CHANGE IT!!!
                 var queryParameters = new PhysicsRayQueryParameters2D
@@ -69,10 +81,12 @@ public partial class Turret : Enemy
                     Node2D collider = result["collider"].As<Node2D>();
                     if (collider is PlayerController)
                     {
+
                         projectileSpawn.LookAt(player.Position);
                         Projectile projectile = (Projectile)projectileScene.Instantiate();
                         Owner.AddChild(projectile);
                         projectile.shooter = this;
+
 
                         Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
                         projectile.velocity = direction * projectile.speed;

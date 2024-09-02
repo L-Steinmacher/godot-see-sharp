@@ -99,14 +99,14 @@ public partial class Battie : Enemy
         if (body is PlayerController)
         {
             PlayerController pc = body as PlayerController;
-            GD.Print("Battie detects: " + pc.Name);
+            // GD.Print("Battie detects: " + pc.Name);
             CurrentState = EnemyState.Chasing;
         }
     }
 
     private void _on_detection_radius_body_exited(Node2D body)
     {
-        GD.Print("body: " + body.Name + " has exited the detection radius of battie");
+        // GD.Print("body: " + body.Name + " has exited the detection radius of battie");
         if (body is PlayerController)
         {
             CurrentState = EnemyState.Patrolling;

@@ -205,6 +205,7 @@ public partial class PlayerController : CharacterBody2D
     {
         if (velocity.X < 5 && velocity.X > -5 && health > 0 && !isAttacking)
         {
+            // animatedSprite2D.Play("Idle_2");
             animatedSprite2D.Play("Idle");
         }
         velocity.X = Mathf.Lerp(velocity.X, 0, Friction);

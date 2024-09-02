@@ -83,7 +83,6 @@ public partial class Turret : Enemy
                         Node2D collider = result["collider"].As<Node2D>();
                         if (collider is PlayerController)
                         {
-
                             projectileSpawn.LookAt(player.Position);
                             Projectile projectile = (Projectile)projectileScene.Instantiate();
                             Owner.AddChild(projectile);

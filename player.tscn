@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://b3gtp8b0jtmv"]
+[gd_scene load_steps=59 format=3 uid="uid://b3gtp8b0jtmv"]
 
 [ext_resource type="Script" path="res://PlayerController.cs" id="1_3m6by"]
 [ext_resource type="PackedScene" uid="uid://1eow83ry5eng" path="res://GhostPlayer.tscn" id="2_hjew5"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bvubfls46kli2" path="res://platformer_metroidvania/herochar sprites(new)/herochar_jump_up_anim_strip_3.png" id="4_v3k83"]
 [ext_resource type="Texture2D" uid="uid://b5y3ix57d2dct" path="res://platformer_metroidvania/herochar sprites(new)/herochar_run_anim_strip_6.png" id="5_pqn32"]
 [ext_resource type="Texture2D" uid="uid://cgpm65bjrkjg2" path="res://platformer_metroidvania/herochar sprites(new)/herochar_hit_anim_strip_3.png" id="6_hrpup"]
+[ext_resource type="Texture2D" uid="uid://cttgqane1o7vp" path="res://2d art/Asset Packs 1-5/Asset Packs 1-4 (final)/Asset Pack-V1/Player Idle/Player Idle 48x48.png" id="9_dj1s1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ju3q1"]
 size = Vector2(11, 15)
@@ -102,6 +103,46 @@ region = Rect2(32, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qu1l4"]
 atlas = ExtResource("3_o358p")
 region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cxsj8"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7erh5"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lywox"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icmf8"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6j5by"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dr26l"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_py60h"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur6n8"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gluvv"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(384, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2sron"]
+atlas = ExtResource("9_dj1s1")
+region = Rect2(432, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_msiwv"]
 atlas = ExtResource("4_v3k83")
@@ -246,6 +287,41 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_cxsj8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7erh5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lywox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_icmf8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6j5by")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dr26l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_py60h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ur6n8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gluvv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2sron")
+}],
+"loop": true,
+"name": &"Idle_2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_msiwv")
 }, {
 "duration": 1.0,
@@ -294,6 +370,11 @@ animations = [{
 "loop": false,
 "name": &"TakeDamage",
 "speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D" groups=["GameManager"]]
@@ -311,7 +392,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"DoubleJump"
+animation = &"Idle_2"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)

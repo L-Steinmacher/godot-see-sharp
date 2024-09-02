@@ -31,7 +31,6 @@ shape = SubResource("RectangleShape2D_pcp5s")
 [node name="RayCast2D" type="RayCast2D" parent="TurretHead"]
 position = Vector2(7.99999, -3)
 rotation = -1.5708
-scale = Vector2(1, 1)
 target_position = Vector2(-4.29153e-06, 96)
 
 [node name="TurretHeadSprite2D" type="Sprite2D" parent="TurretHead"]

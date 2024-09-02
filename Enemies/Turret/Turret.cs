@@ -9,18 +9,22 @@ public partial class Turret : Enemy
     private bool isAttacking = false;
     private bool active;
     private Sprite2D sprite;
-    private Sprite2D turretHead;
+    private Sprite2D turretHeadSprite;
+    private Node2D turretHeadNode;
     private PlayerController player;
     [Export]
     public PackedScene projectileScene;
+    private RayCast2D targeting;
 
     public override void _Ready()
     {
         Health = 1;
         DamageDealtAmount = 1;
         sprite = GetNode<Sprite2D>("Sprite2D");
-        turretHead = GetNode<Sprite2D>("TurretHeadSprite2D");
+        turretHeadNode = GetNode<Node2D>("TurretHead");
+        turretHeadSprite = turretHeadNode.GetNode<Sprite2D>("TurretHeadSprite2D");
         projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
+        targeting = turretHeadNode.GetNode<RayCast2D>("RayCast2D");
     }
 
 
@@ -43,60 +47,61 @@ public partial class Turret : Enemy
     {
         if (active)
         {
+            // get the angle of the player to the turret
             var angle = GlobalPosition.AngleToPoint(player.GlobalPosition);
             bool playerInFrontOfTurret = Mathf.Abs(angle) > Mathf.Pi / 2;
-            // if (Mathf.Abs(angle) > Mathf.Pi / 2)
-            // {
-            //     sprite.FlipH = false;
-            //     turretHead.FlipH = false;
-            // }
-            // else
-            // {
-            //     sprite.FlipH = true;
-            //     turretHead.FlipH = true;
-            // }
-            if (playerInFrontOfTurret)
-            {
-                turretHead.FlipH = playerInFrontOfTurret;
-                turretHead.FlipV = playerInFrontOfTurret;
-                //  TODO have the head slowly track the player and stop tracking when about to fire and wait till fire animation is finished.
-                turretHead.LookAt(player.GlobalPosition);
-            }
-            if (playerInFrontOfTurret && !isAttacking)
-            {
-                // Godot Intersect Ray requires this layout. SO DONT CHANGE IT!!!
-                var queryParameters = new PhysicsRayQueryParameters2D
-                {
-                    From = Position,
-                    To = player.Position,
-                    Exclude = new Godot.Collections.Array<Rid> { GetRid() }
-                };
+            turretHeadSprite.FlipH = playerInFrontOfTurret;
+            turretHeadSprite.FlipV = playerInFrontOfTurret;
+            // v is the vecter from player to the turret head
+            // var v = player.GlobalPosition - turretHead.GlobalPosition;
+            var r = turretHeadNode.GlobalRotation;
+            // slowly move the head towards the players position
+            turretHeadNode.GlobalRotation = (float)Mathf.LerpAngle(r, angle, .07);
 
-                var spaceState = GetWorld2D().DirectSpaceState;
-                Godot.Collections.Dictionary result = spaceState.IntersectRay(queryParameters);
-                if (result != null && result.ContainsKey("collider"))
-                {
-                    Marker2D projectileSpawn = GetNode<Marker2D>("ProjectileSpawn");
+            object target;
+            bool isPlayer;
+            if (targeting.IsColliding())
+            {
+                target = targeting.GetCollider();
+                isPlayer = target.GetType().Name is "PlayerController";
 
-                    Node2D collider = result["collider"].As<Node2D>();
-                    if (collider is PlayerController)
+                if (isPlayer && !isAttacking && playerInFrontOfTurret)
+                {
+                    // Godot Intersect Ray requires this layout. SO DONT CHANGE IT!!!
+                    var queryParameters = new PhysicsRayQueryParameters2D
                     {
+                        From = Position,
+                        To = player.Position,
+                        Exclude = new Godot.Collections.Array<Rid> { GetRid() }
+                    };
 
-                        projectileSpawn.LookAt(player.Position);
-                        Projectile projectile = (Projectile)projectileScene.Instantiate();
-                        Owner.AddChild(projectile);
-                        projectile.shooter = this;
+                    var spaceState = GetWorld2D().DirectSpaceState;
+                    Godot.Collections.Dictionary result = spaceState.IntersectRay(queryParameters);
+                    if (result != null && result.ContainsKey("collider"))
+                    {
+                        Marker2D projectileSpawn = turretHeadNode.GetNode<Marker2D>("ProjectileSpawn");
+                        Node2D collider = result["collider"].As<Node2D>();
+                        if (collider is PlayerController)
+                        {
 
-
-                        Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
-                        projectile.velocity = direction * projectile.speed;
-                        projectile.GlobalTransform = projectileSpawn.GlobalTransform;
-                        // GD.Print("Pew pew X: " + projectile.Transform.X);
-                        isAttacking = true;
+                            projectileSpawn.LookAt(player.Position);
+                            Projectile projectile = (Projectile)projectileScene.Instantiate();
+                            Owner.AddChild(projectile);
+                            projectile.shooter = this;
+                            Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
+                            projectile.velocity = direction * projectile.speed;
+                            projectile.GlobalTransform = projectileSpawn.GlobalTransform;
+                            // GD.Print("Pew pew X: " + projectile.Transform.X);
+                            isAttacking = true;
+                        }
                     }
                 }
+                // else if (playerInFrontOfTurret && isAttacking )
             }
+
+
         }
+
     }
 
     private void ProcessTimers(double delta)

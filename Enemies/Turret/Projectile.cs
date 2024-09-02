@@ -12,6 +12,7 @@ public partial class Projectile : Node2D
 
     public override void _Ready()
     {
+
     }
 
     public override void _Process(double delta)
@@ -51,4 +52,9 @@ public partial class Projectile : Node2D
             QueueFree();
         }
     }
+    private void _on_visible_on_screen_notifier_2d_screen_exited()
+    {
+        QueueFree();
+    }
 }
+

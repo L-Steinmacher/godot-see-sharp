@@ -1,7 +1,6 @@
 using Godot;
 using System;
 
-
 public partial class Turret : Enemy
 {
     private enum TurretState
@@ -19,6 +18,10 @@ public partial class Turret : Enemy
     private Sprite2D turretHeadSprite;
     private Node2D turretHeadNode;
     private float initialRotation;
+    [Export]
+    private bool CanTrackLeft;
+    [Export]
+    private bool CanTrackRight;
     private PlayerController player;
     [Export]
     public PackedScene projectileScene;
@@ -31,7 +34,7 @@ public partial class Turret : Enemy
         turretHeadNode = GetNode<Node2D>("TurretHead");
         turretHeadSprite = turretHeadNode.GetNode<Sprite2D>("TurretHeadSprite2D");
         projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
-        targeting = turretHeadNode.GetNode<RayCast2D>("RayCast2D");
+        targeting = turretHeadNode.GetNode<RayCast2D>("TargetingRayCast2D");
         initialRotation = turretHeadNode.GlobalRotation;
         currentState = TurretState.Idle;
     }
@@ -42,7 +45,8 @@ public partial class Turret : Enemy
         switch (currentState)
         {
             case TurretState.Idle:
-                turretHeadNode.GlobalRotation = Mathf.LerpAngle(turretHeadNode.GlobalRotation, initialRotation, 0.07f);
+                // Should this be in it's own method?
+                ProcessIdle();
                 break;
             case TurretState.Tracking:
                 ProcessTracking();
@@ -57,47 +61,62 @@ public partial class Turret : Enemy
 
     public override void TakeDamage(int DamageAmount)
     {
+        currentState = TurretState.TakeDamage;
         Health -= DamageAmount;
+
         if (Health <= 0)
         {
             QueueFree();
         }
     }
 
+    private void ProcessIdle()
+    {
+        //Slowly bring the turret head Node back to the original position.
+        turretHeadNode.GlobalRotation = Mathf.LerpAngle(turretHeadNode.GlobalRotation, initialRotation, 0.01f);
+    }
+
     private void ProcessTracking()
     {
         if (active)
         {
-            // get the angle of the player to the turret
-            var angle = GlobalPosition.AngleToPoint(player.GlobalPosition);
-            bool playerInFrontOfTurret = Mathf.Abs(angle) > Mathf.Pi / 2;
-            // TODO This is jank and needs to be handled  by the node
-            turretHeadSprite.FlipH = playerInFrontOfTurret;
-            turretHeadSprite.FlipV = playerInFrontOfTurret;
+            var angleToPlayer = GlobalPosition.AngleToPoint(player.GlobalPosition);
+            turretHeadSprite.FlipH = CanTrackLeft;
 
-            // slowly move the head towards the players position
-            var r = turretHeadNode.GlobalRotation;
-            turretHeadNode.GlobalRotation = (float)Mathf.LerpAngle(r, angle, .07);
+            var angleToPlayerDegrees = Mathf.RadToDeg(angleToPlayer);
+            if (angleToPlayerDegrees < 0) angleToPlayerDegrees += 360;
 
-            object target;
-            bool isPlayer;
-            if (targeting.IsColliding())
+            bool playerInFrontOfTurret = angleToPlayerDegrees >= 120 && angleToPlayerDegrees <= 240;
+
+            if (playerInFrontOfTurret)
             {
+                // Slowly move the head towards the player's position
+                var r = turretHeadNode.GlobalRotation;
+                turretHeadNode.GlobalRotation = (float)Mathf.LerpAngle(r, Mathf.DegToRad(angleToPlayerDegrees), 0.05f);
 
-                target = targeting.GetCollider();
-                isPlayer = target.GetType().Name is "PlayerController";
-
-                if (isPlayer && !isAttacking && playerInFrontOfTurret)
+                object target;
+                bool isPlayer;
+                if (targeting.IsColliding())
                 {
-                    currentState = TurretState.Attacking;
+                    GD.Print(targeting.GetCollider().GetType().Name);
+                    target = targeting.GetCollider();
+                    isPlayer = target.GetType().Name is "PlayerController";
+
+                    if (isPlayer && !isAttacking && playerInFrontOfTurret)
+                    {
+                        currentState = TurretState.Attacking;
+                    }
                 }
+            }
+            else
+            {
+                ProcessIdle();
             }
         }
         else
         {
             currentState = TurretState.Idle;
         }
-
     }
 
     private void ProcessAttack()

@@ -31,9 +31,8 @@ shape = SubResource("RectangleShape2D_pcp5s")
 [node name="TurretHead" type="Node2D" parent="."]
 
 [node name="TargetingRayCast2D" type="RayCast2D" parent="TurretHead"]
-position = Vector2(-9, -3)
+position = Vector2(9.5, -3)
 rotation = -1.5708
-scale = Vector2(0.99676, 1.0011)
 target_position = Vector2(-4.29153e-06, 96)
 
 [node name="TurretHeadSprite2D" type="Sprite2D" parent="TurretHead"]
@@ -44,7 +43,6 @@ flip_h = true
 
 [node name="ProjectileSpawn" type="Marker2D" parent="TurretHead"]
 position = Vector2(9, -3)
-scale = Vector2(-36.0184, -19.6017)
 
 [connection signal="body_entered" from="DetectionRadius" to="." method="_on_detection_radius_body_entered"]
 [connection signal="body_exited" from="DetectionRadius" to="." method="_on_detection_radius_body_exited"]

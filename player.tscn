@@ -397,6 +397,11 @@ animation = &"Idle_2"
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)
 zoom = Vector2(4, 4)
+limit_smoothed = true
+drag_horizontal_offset = 0.29
+drag_left_margin = 0.23
+drag_top_margin = 0.35
+drag_right_margin = 0.34
 
 [node name="LeftRayCast2D" type="RayCast2D" parent="."]
 position = Vector2(3, 3)

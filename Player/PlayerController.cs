@@ -81,6 +81,7 @@ public partial class PlayerController : CharacterBody2D
         {
             case PlayerState.MeleAttacking:
                 if (!isAttacking)
+                    // TODO handle sequence attacks with meleAttack
                     ProcessMeleAttack();
                 break;
             case PlayerState.Idle:
@@ -297,7 +298,7 @@ public partial class PlayerController : CharacterBody2D
 
     private Vector2 ProcessJump(Vector2 velocity)
     {
-        bool IsColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
+        bool isColliding = GetNode<RayCast2D>("LeftRayCast2D").IsColliding() || GetNode<RayCast2D>("RightRayCast2D").IsColliding();
         RayCast2D leftRayCast = GetNode<RayCast2D>("LeftRayCast2D");
         RayCast2D rightRayCast = GetNode<RayCast2D>("RightRayCast2D");
         string collidingRaycast = null;
@@ -305,13 +306,11 @@ public partial class PlayerController : CharacterBody2D
         if (leftRayCast.IsColliding() && leftRayCast.GetCollider().GetType().Name == "TileMapLayer")
         {
             collidingRaycast = "LeftRayCast2D";
-
         }
         else if (rightRayCast.IsColliding() && rightRayCast.GetCollider().GetType().Name == "TileMapLayer")
         {
             collidingRaycast = "RightRayCast2D";
         }
-
 
         if (!IsOnFloor())
         {
@@ -323,17 +322,17 @@ public partial class PlayerController : CharacterBody2D
             {
                 animatedSprite2D.Play("Fall");
             }
-            if (!isWallJumping && IsColliding && collidingRaycast != null)
+
+            if (!isWallJumping && isColliding && collidingRaycast != null)
             {
                 float colliderDirection = collidingRaycast == "LeftRayCast2D" ? -1 : 1;
                 bool flipHDirection = collidingRaycast == "LeftRayCast2D" ? false : true;
-
                 animatedSprite2D.FlipH = flipHDirection;
                 velocity.Y = maxJumpVelocity;
                 velocity.X = maxJumpVelocity * colliderDirection;
                 isWallJumping = true;
-
             }
+
             if (collidingRaycast == null && canDoubleJump && !isDoubleJumping)
             {
                 if (Input.IsActionJustPressed("jump") && canDoubleJump && !isDoubleJumping)
@@ -428,6 +427,7 @@ public partial class PlayerController : CharacterBody2D
             }
         }
     }
+    // TODO Handle sequence attacks with mele attack.
     public void _on_animated_sprite_animation_finished()
     {
         if (animatedSprite2D.Animation == "Death")

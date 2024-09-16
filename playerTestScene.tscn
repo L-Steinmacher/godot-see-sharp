@@ -1,8 +1,8 @@
 [gd_scene load_steps=19 format=4 uid="uid://cle0c1koanuw7"]
 
 [ext_resource type="Texture2D" uid="uid://dtg40apjxqy5s" path="res://platformer_metroidvania/tiles and background_foreground (new)/tileset.png" id="1_tenwm"]
-[ext_resource type="Script" path="res://GameManager.cs" id="1_yehvv"]
-[ext_resource type="PackedScene" uid="uid://b3gtp8b0jtmv" path="res://player.tscn" id="2_e6wok"]
+[ext_resource type="Script" path="res://Player/GameManager.cs" id="1_yehvv"]
+[ext_resource type="PackedScene" uid="uid://b3gtp8b0jtmv" path="res://Player/player.tscn" id="2_e6wok"]
 [ext_resource type="PackedScene" uid="uid://80ofkvjkxm15" path="res://spikes.tscn" id="3_7dggu"]
 [ext_resource type="Texture2D" uid="uid://cjb6o3dgmcjxy" path="res://platformer_metroidvania/grass_tileset.png" id="3_236vj"]
 [ext_resource type="Texture2D" uid="uid://bk6uvht7aif0q" path="res://platformer_metroidvania/snow.png" id="4_d8g6n"]
@@ -1198,7 +1198,7 @@ position = Vector2(912, 175)
 
 [node name="Turret" parent="." instance=ExtResource("10_gb16f")]
 position = Vector2(452, 128)
-CanTrackLeft = true
+TracksLeft = true
 projectileScene = null
 
 [connection signal="Death" from="Player" to="." method="_on_player_death"]

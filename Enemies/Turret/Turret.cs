@@ -19,9 +19,8 @@ public partial class Turret : Enemy
     private Node2D turretHeadNode;
     private float initialRotation;
     [Export]
-    private bool CanTrackLeft;
-    [Export]
-    private bool CanTrackRight;
+    private bool TracksLeft;
+
     private PlayerController player;
     [Export]
     public PackedScene projectileScene;
@@ -81,12 +80,23 @@ public partial class Turret : Enemy
         if (active)
         {
             var angleToPlayer = GlobalPosition.AngleToPoint(player.GlobalPosition);
-            turretHeadSprite.FlipH = CanTrackLeft;
+
+            // Is Seem no good but it good.
+            turretHeadSprite.FlipH = !TracksLeft;
 
             var angleToPlayerDegrees = Mathf.RadToDeg(angleToPlayer);
             if (angleToPlayerDegrees < 0) angleToPlayerDegrees += 360;
+            bool playerInFrontOfTurret;
 
-            bool playerInFrontOfTurret = angleToPlayerDegrees >= 120 && angleToPlayerDegrees <= 240;
+            if (TracksLeft)
+            {
+                playerInFrontOfTurret = angleToPlayerDegrees >= 120 && angleToPlayerDegrees <= 240;
+            }
+            else
+            {
+                playerInFrontOfTurret = angleToPlayerDegrees <= 60 || angleToPlayerDegrees >= 300;
+            }
+            GD.Print("angle to player degrees: " + angleToPlayerDegrees);
 
             if (playerInFrontOfTurret)
             {

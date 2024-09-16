@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://80ofkvjkxm15"]
 
-[ext_resource type="Script" path="res://Spikes.cs" id="1_xhyd2"]
+[ext_resource type="Script" path="res://Enemies/Spikes/Spikes.cs" id="1_xhyd2"]
 [ext_resource type="Texture2D" uid="uid://b7saa6xdw60d1" path="res://platformer_metroidvania/miscellaneous sprites/spikes.png" id="2_snwr0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjw8"]

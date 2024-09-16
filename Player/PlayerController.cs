@@ -26,6 +26,9 @@ public partial class PlayerController : CharacterBody2D
     public float minJumpHeight = Globals.UNIT_SIZE * .8f;
     public float maxJumpHeight = Globals.UNIT_SIZE * 5f;
     private float jumpDuration = 0.5f;
+    private bool isFalling;
+    private double fallTimer = 3.0;
+    private double fallTimerReset = 3.0;
     public const float Speed = Globals.UNIT_SIZE * 10f;
     public const float WallJumpVerticalVelocity = Globals.UNIT_SIZE * -10;
     private bool isDashing = false;
@@ -107,11 +110,14 @@ public partial class PlayerController : CharacterBody2D
             // Add the gravity.
             if (!IsOnFloor())
             {
+                isFalling = true;
                 velocity.Y += gravity * (float)delta;
             }
 
             if (IsOnFloor())
             {
+                isFalling = false;
+                fallTimer = fallTimerReset;
                 isDoubleJumping = false;
                 if (!isDashing && dashCooldownTimer <= 0)
                 {
@@ -163,6 +169,17 @@ public partial class PlayerController : CharacterBody2D
 
     private void ProcessTimers(double delta)
     {
+        if (isFalling)
+        {
+            GD.Print("falling: " + fallTimer);
+            fallTimer -= delta;
+            if (fallTimer <= 0)
+            {
+                EmitSignal(nameof(Death));
+                isFalling = false;
+                fallTimer = fallTimerReset;
+            }
+        }
         if (isTakingDammage)
         {
             damageTimer -= delta;
@@ -212,6 +229,7 @@ public partial class PlayerController : CharacterBody2D
     }
     private Vector2 ProcessMovement(ref Vector2 velocity)
     {
+
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
         Vector2 direction = Input.GetVector("move_left", "move_right", "climb_up", "climb_down");
@@ -321,6 +339,7 @@ public partial class PlayerController : CharacterBody2D
             else
             {
                 animatedSprite2D.Play("Fall");
+                isFalling = true;
             }
 
             if (!isWallJumping && isColliding && collidingRaycast != null)

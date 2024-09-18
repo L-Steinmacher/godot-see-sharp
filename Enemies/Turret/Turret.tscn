@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Enemies/Turret/Turret.cs" id="1_jmp6v"]
 [ext_resource type="Texture2D" uid="uid://b1mn3pqyg13lu" path="res://Enemies/Turret/Assets/turretProto.png" id="2_5m56i"]
-[ext_resource type="PackedScene" uid="uid://brship0mo6m2n" path="res://Enemies/Turret/Projectile.tscn" id="2_rwwvh"]
+[ext_resource type="PackedScene" uid="uid://brship0mo6m2n" path="res://Attacks/Projectile/Projectile.tscn" id="2_rwwvh"]
 [ext_resource type="Texture2D" uid="uid://dd3vphj6p5gs2" path="res://Enemies/Turret/Assets/cannon_head.png" id="3_w22ov"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_852nl"]

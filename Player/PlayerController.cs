@@ -161,6 +161,19 @@ public partial class PlayerController : CharacterBody2D
             {
                 GameManager.MagicController.CycleAttack();
             }
+            if (Input.IsActionJustPressed("open_menu"))
+            {
+                if (GetTree().Paused)
+                {
+                    GetTree().Paused = false; // Unpause the game
+                    GD.Print("Game Unpaused");
+                }
+                else
+                {
+                    GetTree().Paused = true; // Pause the game
+                    GD.Print("Game Paused");
+                }
+            }
             facingDirection = ProcessMovement(ref velocity);
             Velocity = velocity;
             MoveAndSlide();
@@ -171,7 +184,7 @@ public partial class PlayerController : CharacterBody2D
     {
         if (isFalling)
         {
-            GD.Print("falling: " + fallTimer);
+
             fallTimer -= delta;
             if (fallTimer <= 0)
             {
@@ -441,7 +454,7 @@ public partial class PlayerController : CharacterBody2D
                 if (obj.Owner is MagicPotion)
                 {
                     MagicPotion mp = (MagicPotion)obj.Owner;
-                    mp.UsePotion();
+                    mp.InteractWithObject();
                 }
             }
         }

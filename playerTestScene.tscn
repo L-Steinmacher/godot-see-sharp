@@ -1198,7 +1198,4 @@ position = Vector2(912, 175)
 
 [node name="Turret" parent="." instance=ExtResource("10_gb16f")]
 position = Vector2(452, 128)
-TracksLeft = true
 projectileScene = null
-
-[connection signal="Death" from="Player" to="." method="_on_player_death"]

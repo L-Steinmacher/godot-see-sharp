@@ -9,12 +9,8 @@ public partial class MagicPotion : Collectable
         GetNode<AnimationPlayer>("AnimationPlayer").Play("Bounce");
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
 
-    public void UsePotion()
+    public override void InteractWithObject()
     {
         GameManager.Player.UpdateMana(10);
         QueueFree();

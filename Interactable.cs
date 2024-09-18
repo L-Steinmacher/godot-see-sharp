@@ -3,10 +3,6 @@ using System;
 
 public abstract partial class Interactable : Node2D
 {
+    public abstract void InteractWithObject();
 
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
 }

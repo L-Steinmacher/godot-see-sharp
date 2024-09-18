@@ -9,7 +9,4 @@ public abstract partial class Collectable : Interactable
     public override void _Process(double delta)
     {
     }
-    public void InteractWithObject(Node obj)
-    {
-    }
 }

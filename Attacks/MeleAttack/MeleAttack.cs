@@ -4,14 +4,11 @@ using System;
 public partial class MeleAttack : Spell
 {
     private AnimatedSprite2D animatedSprite;
-    public string ResourcePath = "res://Attacks/MeleAttack.tscn";
+    public string ResourcePath = "res://Attacks/MeleAttack/MeleAttack.tscn";
 
     public override void _Ready()
     {
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    }
-    public override void _Process(double delta)
-    {
     }
 
     public override void SetUp(bool faceDirection)

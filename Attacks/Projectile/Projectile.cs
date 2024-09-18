@@ -1,14 +1,15 @@
 using Godot;
 using System;
 
-public partial class Projectile : Node2D
+public partial class Projectile : Spell
 {
     private int damageDealtAmmount = 1;
-    public string ResourcePath = "res://Enemies/Turret/Projectile.tscn";
+    private string ResourcePath = "res://Attacks/Projectile/Projectile.tscn";
     public int speed = 150;
     private double lifespan = 3;
     public Vector2 velocity { get; set; }
-    public Turret shooter;
+    public CharacterBody2D shooter;
+    private PlayerController player;
 
     public override void _Ready()
     {
@@ -25,9 +26,25 @@ public partial class Projectile : Node2D
         }
     }
 
-    public string LoadResourcePath()
+    public override string LoadResourcePath()
     {
         return ResourcePath;
+    }
+
+    public override void CastSpell(bool faceDirection)
+    {
+        if (player.mana >= ManaCost)
+        {
+            Vector2 direction;
+            direction = faceDirection ? new Vector2(-1, 0) : new Vector2(1, 0);
+            velocity = direction * speed;
+            GD.Print("pew pew");
+        }
+    }
+
+    public override void SetUp(bool faceDirection)
+    {
+        throw new NotImplementedException();
     }
 
     private void _on_area_2d_body_entered(Node2D body)

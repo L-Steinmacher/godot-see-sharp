@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://brship0mo6m2n"]
 
-[ext_resource type="Script" path="res://Enemies/Turret/Projectile.cs" id="1_7ort3"]
+[ext_resource type="Script" path="res://Attacks/Projectile/Projectile.cs" id="1_7ort3"]
 [ext_resource type="Texture2D" uid="uid://d2rmiu88htbrm" path="res://Enemies/Turret/Assets/projectile.png" id="2_daalr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cxlr0"]
@@ -8,6 +8,7 @@ radius = 4.12311
 
 [node name="Projectile" type="Node2D"]
 script = ExtResource("1_7ort3")
+ManaCost = 30.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_daalr")

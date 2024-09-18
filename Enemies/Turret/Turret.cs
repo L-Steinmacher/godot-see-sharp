@@ -32,8 +32,18 @@ public partial class Turret : Enemy
         DamageDealtAmount = 1;
         turretHeadNode = GetNode<Node2D>("TurretHead");
         turretHeadSprite = turretHeadNode.GetNode<Sprite2D>("TurretHeadSprite2D");
-        projectileScene = (PackedScene)ResourceLoader.Load("res://Enemies/Turret/Projectile.tscn");
+        projectileScene = (PackedScene)ResourceLoader.Load("res://Attacks/Projectile/Projectile.tscn");
         targeting = turretHeadNode.GetNode<RayCast2D>("TargetingRayCast2D");
+
+        if (TracksLeft)
+        {
+            // Flip RayCast to point in the opposite direction (180 degrees)
+            targeting.RotationDegrees = 90f;
+            // Move the RayCast2D to the opposite side of the turret head
+            Vector2 currentPosition = targeting.Position;
+            targeting.Position = new Vector2(-currentPosition.X, currentPosition.Y);
+        }
+
         initialRotation = turretHeadNode.GlobalRotation;
         currentState = TurretState.Idle;
     }
@@ -108,7 +118,7 @@ public partial class Turret : Enemy
                 bool isPlayer;
                 if (targeting.IsColliding())
                 {
-                    GD.Print(targeting.GetCollider().GetType().Name);
+                    // GD.Print(targeting.GetCollider().GetType().Name);
                     target = targeting.GetCollider();
                     isPlayer = target.GetType().Name is "PlayerController";
 

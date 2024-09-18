@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://dh7xdb43bc0kv"]
 
-[ext_resource type="Script" path="res://Attacks/MeleAttack.cs" id="1_13efa"]
+[ext_resource type="Script" path="res://Attacks/MeleAttack/MeleAttack.cs" id="1_13efa"]
 [ext_resource type="Texture2D" uid="uid://cgq25tu26hxgi" path="res://platformer_metroidvania/herochar sprites(new)/sword_effect_strip_4(new).png" id="1_yabt3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8bnay"]
@@ -76,7 +76,7 @@ animations = [{
 size = Vector2(12, 11)
 
 [node name="MeleAttack" type="Node2D"]
-position = Vector2(3, -10)
+position = Vector2(3, 10)
 script = ExtResource("1_13efa")
 metadata/_edit_group_ = true
 

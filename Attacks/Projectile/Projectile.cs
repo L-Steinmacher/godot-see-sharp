@@ -33,13 +33,10 @@ public partial class Projectile : Spell
 
     public override void CastSpell(bool faceDirection)
     {
-        if (player.mana >= ManaCost)
-        {
-            Vector2 direction;
-            direction = faceDirection ? new Vector2(-1, 0) : new Vector2(1, 0);
-            velocity = direction * speed;
-            GD.Print("pew pew");
-        }
+        Vector2 direction;
+        direction = faceDirection ? new Vector2(-1, 0) : new Vector2(1, 0);
+        velocity = direction * speed;
+        GD.Print("pew pew");
     }
 
     public override void SetUp(bool faceDirection)

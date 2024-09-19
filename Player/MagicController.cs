@@ -9,7 +9,6 @@ public partial class MagicController : Node
     public MeleAttack meleAttack = new();
     public Projectile projectileAttack = new();
     private PackedScene equipedMele;
-    // Called when the node enters the scene tree for the first time.
 
     public MagicController()
     {
@@ -21,20 +20,22 @@ public partial class MagicController : Node
         equipedMele = AvSpells[0];
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
-
     public void CastSpell(bool facingDirection)
     {
         // TODO ADD CHECK TO SEE IS THERE IS ENOUGH MANA TO CAST SPELL
         Spell equippedSpell = (Spell)EquippedSpell.Instantiate();
-        string rayCastDirection = facingDirection ? "SpellCastLeft" : "SpellCastRight";
-        equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>(rayCastDirection).GlobalPosition;
-        GameManager.GlobalGameManager.AddChild(equippedSpell);
-        equippedSpell.CastSpell(facingDirection);
-        GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
+        if (GameManager.Player.mana >= equippedSpell.ManaCost)
+        {
+            string rayCastDirection = facingDirection ? "SpellCastLeft" : "SpellCastRight";
+            equippedSpell.GlobalPosition = GameManager.Player.GetNode<Marker2D>(rayCastDirection).GlobalPosition;
+            GameManager.GlobalGameManager.AddChild(equippedSpell);
+            equippedSpell.CastSpell(facingDirection);
+            GameManager.Player.UpdateMana(-equippedSpell.ManaCost);
+        }
+        else
+        {
+            GD.Print("uhhh ohhh no mana!");
+        }
     }
 
     public void CycleAttack()

@@ -41,6 +41,8 @@ public partial class PlayerController : CharacterBody2D
     private double damageTimerReset = .3;
     private int attackCount = 0;
     public bool isAttacking = false;
+    private float comboResetTime = 1.0f;
+    private Timer comboTimer;
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
     private double wallJumpTimeReset = .3;
@@ -69,6 +71,12 @@ public partial class PlayerController : CharacterBody2D
         GameManager.Player = this;
         minJumpVelocity = -MathF.Sqrt(2 * gravity * minJumpHeight);
         maxJumpVelocity = -MathF.Sqrt(2 * gravity * maxJumpHeight);
+        comboTimer = new Timer();
+        AddChild(comboTimer);
+        comboTimer.WaitTime = comboResetTime;
+        comboTimer.OneShot = true;
+        comboTimer.Connect("timeout", new Callable(this, nameof(OnComboTimeout)));
+        ;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -137,9 +145,10 @@ public partial class PlayerController : CharacterBody2D
             }
             if (Input.IsActionJustPressed("attack"))
             {
-                GD.Print(attackCount);
-                attackCount += 1;
-                CurrentState = PlayerState.MeleAttacking;
+                // GD.Print(attackCount);
+                // attackCount += 1;
+                // CurrentState = PlayerState.MeleAttacking;
+                StartMeleeAttack();
             }
 
             if (Input.IsActionJustPressed("jump"))
@@ -166,6 +175,9 @@ public partial class PlayerController : CharacterBody2D
             }
             if (Input.IsActionJustPressed("open_menu"))
             {
+                /**
+                *TODO: This pauses the entire game and needs to pause a nested pause node so we can unpause!
+                */
                 if (GetTree().Paused)
                 {
                     GetTree().Paused = false; // Unpause the game
@@ -181,6 +193,46 @@ public partial class PlayerController : CharacterBody2D
             Velocity = velocity;
             MoveAndSlide();
         }
+    }
+
+    private void StartMeleeAttack()
+    {
+        if (!comboTimer.IsStopped()) // Combo is active
+        {
+            GD.Print("Combo Active - Current attackCount: ", attackCount);
+            attackCount = Mathf.Min(attackCount + 1, 3); // Limit to triple attack
+        }
+        else
+        {
+            attackCount = 1; // Start a new combo
+        }
+
+        comboTimer.Start(); // Reset combo timer
+        GD.Print("Combo Timer started. Time left: ", comboTimer.TimeLeft);
+        ExecuteMeleeAttack();
+    }
+
+    private void ExecuteMeleeAttack()
+    {
+        isAttacking = true;
+        bool faceDirection = animatedSprite2D.FlipH;
+
+        switch (attackCount)
+        {
+            case 1:
+                animatedSprite2D.Play("Attack");
+                GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Single);
+                break;
+            case 2:
+                GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Double);
+                break;
+            case 3:
+                GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Tripple);
+                break;
+        }
+
+        // Increment attackCount only after the first attack animation finishes
+        attackCount = Mathf.Min(attackCount + 1, 3); // Increment attack count after execution
     }
 
     private void ProcessTimers(double delta)
@@ -403,7 +455,6 @@ public partial class PlayerController : CharacterBody2D
             bool faceDirection = animatedSprite2D.FlipH;
             GameManager.MagicController.CastSpell(faceDirection);
             animatedSprite2D.Play("Attack");
-            GD.Print(attackCount);
         }
     }
     public void TakeDamage(int damage)
@@ -466,51 +517,53 @@ public partial class PlayerController : CharacterBody2D
     // TODO Handle sequence attacks with mele attack.
     public void _on_animated_sprite_animation_finished()
     {
-        if (animatedSprite2D.Animation == "Death")
+        switch (animatedSprite2D.Animation)
         {
-            animatedSprite2D.Stop();
-            animatedSprite2D.Hide();
-            EmitSignal(nameof(Death));
-        }
-        if (animatedSprite2D.Animation == "DoubleJump")
-        {
-            animatedSprite2D.Play("Fall");
-        }
-        if (animatedSprite2D.Animation == "Attack")
-        {
-            attackCount -= 1;
-            if (attackCount == 0)
-            {
-                isAttacking = false;
-                CurrentState = PlayerState.Idle;
-            }
-            else
-            {
-                animatedSprite2D.Play("Attack");
+            case "Death":
+                // Handle death animation completion
+                animatedSprite2D.Stop();
+                animatedSprite2D.Hide();
+                EmitSignal(nameof(Death));
+                break;
+
+            case "DoubleJump":
+                // Automatically transition to fall after double jump finishes
+                animatedSprite2D.Play("Fall");
+                break;
+
+            case "Attack":
+                // Handle attack animation completion and manage combo attacks
                 attackCount -= 1;
-            }
+
+                if (attackCount > 0)
+                {
+                    // If there are remaining attacks in the combo, continue the attack animation
+                    animatedSprite2D.Play("Attack");
+                }
+                else
+                {
+                    // End the combo and reset the player's state to Idle
+                    isAttacking = false;
+                    CurrentState = PlayerState.Idle;
+                }
+                break;
+
+            case "TakeDamage":
+                // When damage animation ends, mark the player as no longer taking damage
+                isTakingDammage = false;
+                break;
+
+            default:
+                GD.Print("Unhandled animation finished: ", animatedSprite2D.Animation);
+                break;
         }
-        if (animatedSprite2D.Animation == "Attack")
-        {
-            if (attackCount > 0)
-            {
-                isAttacking = false;
-                CurrentState = PlayerState.Idle;
-            }
-            else
-            {
-                animatedSprite2D.Play("TrippleSlash");
-            }
-        }
-        if (animatedSprite2D.Animation == "TrippleSlash")
-        {
-            isAttacking = false;
-            CurrentState = PlayerState.Idle;
-            attackCount = 0;
-        }
-        if (animatedSprite2D.Animation == "TakeDamage")
-        {
-            isTakingDammage = false;
-        }
+    }
+
+    private void OnComboTimeout()
+    {
+        // Reset combo when time runs out
+        attackCount = 0;
+        isAttacking = false;
+        CurrentState = PlayerState.Idle;
     }
 }

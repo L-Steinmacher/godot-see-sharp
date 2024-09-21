@@ -1,7 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://dh7xdb43bc0kv"]
+[gd_scene load_steps=24 format=3 uid="uid://dh7xdb43bc0kv"]
 
 [ext_resource type="Script" path="res://Attacks/MeleAttack/MeleAttack.cs" id="1_13efa"]
 [ext_resource type="Texture2D" uid="uid://cgq25tu26hxgi" path="res://platformer_metroidvania/herochar sprites(new)/sword_effect_strip_4(new).png" id="1_yabt3"]
+[ext_resource type="Texture2D" uid="uid://c7b0uxh7gkk0w" path="res://Attacks/MeleAttack/double_slash_effect-sheet.png" id="3_ljrwn"]
+[ext_resource type="Texture2D" uid="uid://djqw4y5oxsrph" path="res://Attacks/MeleAttack/tripple_slash_effect_sheet.png" id="4_1jyq5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8bnay"]
 atlas = ExtResource("1_yabt3")
@@ -19,21 +21,57 @@ region = Rect2(32, 0, 16, 16)
 atlas = ExtResource("1_yabt3")
 region = Rect2(48, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fv61b"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_fq7gr"]
+atlas = ExtResource("3_ljrwn")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_51aeh"]
+atlas = ExtResource("3_ljrwn")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_42sla"]
+atlas = ExtResource("3_ljrwn")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2tpym"]
+atlas = ExtResource("3_ljrwn")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_txqd3"]
 atlas = ExtResource("1_yabt3")
 region = Rect2(0, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hr7xq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1qpx"]
 atlas = ExtResource("1_yabt3")
 region = Rect2(16, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jjo5o"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ncpfo"]
 atlas = ExtResource("1_yabt3")
 region = Rect2(32, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_s01v2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_affxd"]
 atlas = ExtResource("1_yabt3")
 region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tc7lk"]
+atlas = ExtResource("4_1jyq5")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dydth"]
+atlas = ExtResource("4_1jyq5")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lg7xa"]
+atlas = ExtResource("4_1jyq5")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_63ogf"]
+atlas = ExtResource("4_1jyq5")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5v0t5"]
+atlas = ExtResource("4_1jyq5")
+region = Rect2(64, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dcea3"]
 animations = [{
@@ -56,20 +94,57 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fv61b")
+"texture": SubResource("AtlasTexture_fq7gr")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_hr7xq")
+"texture": SubResource("AtlasTexture_51aeh")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jjo5o")
+"texture": SubResource("AtlasTexture_42sla")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_s01v2")
+"texture": SubResource("AtlasTexture_2tpym")
 }],
 "loop": false,
-"name": &"DoubleSlash",
-"speed": 5.0
+"name": &"Double",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_txqd3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1qpx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ncpfo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_affxd")
+}],
+"loop": false,
+"name": &"Single",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tc7lk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dydth")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lg7xa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_63ogf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5v0t5")
+}],
+"loop": false,
+"name": &"Tripple",
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n016b"]
@@ -84,8 +159,8 @@ metadata/_edit_group_ = true
 position = Vector2(-1, 0)
 scale = Vector2(0.875, 0.9375)
 sprite_frames = SubResource("SpriteFrames_dcea3")
-animation = &"Cast"
-frame = 3
+animation = &"Tripple"
+frame = 4
 frame_progress = 1.0
 metadata/_edit_group_ = true
 

@@ -38,6 +38,15 @@ public partial class MagicController : Node
         }
     }
 
+    public void MeleCast(bool faceDirection, MeleAttack.CastAnimation cast)
+    {
+        MeleAttack mele = (MeleAttack)equipedMele.Instantiate();
+        string rayCastDirection = faceDirection ? "SpellCastLeft" : "SpellCastRight";
+        mele.GlobalPosition = GameManager.Player.GetNode<Marker2D>(rayCastDirection).GlobalPosition;
+        GameManager.GlobalGameManager.AddChild(mele);
+        mele.MeleCast(faceDirection, cast);
+    }
+
     public void CycleAttack()
     {
         int curIndex = AvSpells.IndexOf(EquippedSpell);

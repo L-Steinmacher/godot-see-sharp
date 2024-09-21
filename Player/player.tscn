@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://b3gtp8b0jtmv"]
+[gd_scene load_steps=70 format=3 uid="uid://b3gtp8b0jtmv"]
 
 [ext_resource type="Script" path="res://Player/PlayerController.cs" id="1_3m6by"]
 [ext_resource type="PackedScene" uid="uid://1eow83ry5eng" path="res://Player/GhostPlayer.tscn" id="2_hjew5"]
@@ -11,7 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://bvubfls46kli2" path="res://platformer_metroidvania/herochar sprites(new)/herochar_jump_up_anim_strip_3.png" id="4_v3k83"]
 [ext_resource type="Texture2D" uid="uid://b5y3ix57d2dct" path="res://platformer_metroidvania/herochar sprites(new)/herochar_run_anim_strip_6.png" id="5_pqn32"]
 [ext_resource type="Texture2D" uid="uid://cgpm65bjrkjg2" path="res://platformer_metroidvania/herochar sprites(new)/herochar_hit_anim_strip_3.png" id="6_hrpup"]
+[ext_resource type="Texture2D" uid="uid://c7b0uxh7gkk0w" path="res://Attacks/MeleAttack/double_slash_effect-sheet.png" id="7_q4dkp"]
 [ext_resource type="Texture2D" uid="uid://cttgqane1o7vp" path="res://2d art/Asset Packs 1-5/Asset Packs 1-4 (final)/Asset Pack-V1/Player Idle/Player Idle 48x48.png" id="9_dj1s1"]
+[ext_resource type="Texture2D" uid="uid://djqw4y5oxsrph" path="res://Attacks/MeleAttack/tripple_slash_effect_sheet.png" id="14_gau8n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ju3q1"]
 size = Vector2(11, 15)
@@ -75,6 +77,22 @@ region = Rect2(16, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_re27l"]
 atlas = ExtResource("4_k14yq")
 region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qx1qi"]
+atlas = ExtResource("7_q4dkp")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jyqgt"]
+atlas = ExtResource("7_q4dkp")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aqlfg"]
+atlas = ExtResource("7_q4dkp")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gt2qf"]
+atlas = ExtResource("7_q4dkp")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2sjrm"]
 atlas = ExtResource("2_oeeme")
@@ -192,6 +210,26 @@ region = Rect2(16, 0, 16, 16)
 atlas = ExtResource("6_hrpup")
 region = Rect2(32, 0, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_uq87k"]
+atlas = ExtResource("14_gau8n")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjtcb"]
+atlas = ExtResource("14_gau8n")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h77xt"]
+atlas = ExtResource("14_gau8n")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_quno8"]
+atlas = ExtResource("14_gau8n")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3rcp"]
+atlas = ExtResource("14_gau8n")
+region = Rect2(64, 0, 16, 16)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_h8bqr"]
 animations = [{
 "frames": [{
@@ -253,6 +291,23 @@ animations = [{
 "loop": false,
 "name": &"DoubleJump",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qx1qi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jyqgt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aqlfg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gt2qf")
+}],
+"loop": false,
+"name": &"DoubleSlash",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -371,10 +426,25 @@ animations = [{
 "name": &"TakeDamage",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
-"name": &"new_animation",
-"speed": 5.0
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uq87k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yjtcb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h77xt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_quno8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p3rcp")
+}],
+"loop": false,
+"name": &"TrippleSl;ash",
+"speed": 10.0
 }]
 
 [node name="Player" type="CharacterBody2D" groups=["GameManager"]]
@@ -392,7 +462,7 @@ one_way_collision = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 2)
 sprite_frames = SubResource("SpriteFrames_h8bqr")
-animation = &"Idle_2"
+animation = &"TrippleSl;ash"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, 2)

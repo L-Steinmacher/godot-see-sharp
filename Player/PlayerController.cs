@@ -39,6 +39,7 @@ public partial class PlayerController : CharacterBody2D
     private double dashCooldownTimeReset = 1;
     private double damageTimer = .3;
     private double damageTimerReset = .3;
+    private int attackCount = 0;
     public bool isAttacking = false;
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
@@ -136,6 +137,8 @@ public partial class PlayerController : CharacterBody2D
             }
             if (Input.IsActionJustPressed("attack"))
             {
+                GD.Print(attackCount);
+                attackCount += 1;
                 CurrentState = PlayerState.MeleAttacking;
             }
 
@@ -400,6 +403,7 @@ public partial class PlayerController : CharacterBody2D
             bool faceDirection = animatedSprite2D.FlipH;
             GameManager.MagicController.CastSpell(faceDirection);
             animatedSprite2D.Play("Attack");
+            GD.Print(attackCount);
         }
     }
     public void TakeDamage(int damage)
@@ -474,8 +478,35 @@ public partial class PlayerController : CharacterBody2D
         }
         if (animatedSprite2D.Animation == "Attack")
         {
+            attackCount -= 1;
+            if (attackCount == 0)
+            {
+                isAttacking = false;
+                CurrentState = PlayerState.Idle;
+            }
+            else
+            {
+                animatedSprite2D.Play("Attack");
+                attackCount -= 1;
+            }
+        }
+        if (animatedSprite2D.Animation == "Attack")
+        {
+            if (attackCount > 0)
+            {
+                isAttacking = false;
+                CurrentState = PlayerState.Idle;
+            }
+            else
+            {
+                animatedSprite2D.Play("TrippleSlash");
+            }
+        }
+        if (animatedSprite2D.Animation == "TrippleSlash")
+        {
             isAttacking = false;
             CurrentState = PlayerState.Idle;
+            attackCount = 0;
         }
         if (animatedSprite2D.Animation == "TakeDamage")
         {

@@ -130,6 +130,7 @@ public partial class SlimeEnemy : Enemy
 
     private void _on_detection_body_entered(Node2D body)
     {
+        // TODO Implement silme persue player
         GD.Print("Slime detected " + body.Name + " body,");
     }
 }

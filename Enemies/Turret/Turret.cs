@@ -106,7 +106,6 @@ public partial class Turret : Enemy
             {
                 playerInFrontOfTurret = angleToPlayerDegrees <= 60 || angleToPlayerDegrees >= 300;
             }
-            GD.Print("angle to player degrees: " + angleToPlayerDegrees);
 
             if (playerInFrontOfTurret)
             {
@@ -118,7 +117,6 @@ public partial class Turret : Enemy
                 bool isPlayer;
                 if (targeting.IsColliding())
                 {
-                    // GD.Print(targeting.GetCollider().GetType().Name);
                     target = targeting.GetCollider();
                     isPlayer = target.GetType().Name is "PlayerController";
 
@@ -164,7 +162,6 @@ public partial class Turret : Enemy
                 Vector2 direction = (player.GlobalPosition - projectileSpawn.GlobalPosition).Normalized();
                 projectile.velocity = direction * projectile.speed;
                 projectile.GlobalTransform = projectileSpawn.GlobalTransform;
-                // GD.Print("Pew pew X: " + projectile.Transform.X);
                 isAttacking = true;
                 currentState = TurretState.Tracking;
             }
@@ -185,7 +182,6 @@ public partial class Turret : Enemy
     }
     private void _on_detection_radius_body_entered(Node2D body)
     {
-        GD.Print("body: " + body.Name + " has entered the detection radious");
         if (body is PlayerController)
         {
             player = body as PlayerController;
@@ -196,7 +192,6 @@ public partial class Turret : Enemy
 
     private void _on_detection_radius_body_exited(Node2D body)
     {
-        // GD.Print("body: " + body.Name + " has exited the detection radious");
         if (body is PlayerController)
         {
             currentState = TurretState.Idle;

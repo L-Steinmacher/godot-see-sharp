@@ -52,10 +52,8 @@ public partial class MagicController : Node
         int curIndex = AvSpells.IndexOf(EquippedSpell);
         curIndex += 1;
 
-        GD.Print(curIndex);
         if (curIndex >= AvSpells.Count)
         {
-            GD.Print("Cycle Attack" + EquippedSpell.GetType().Name);
             curIndex = 0;
         }
         EquippedSpell = AvSpells[curIndex];

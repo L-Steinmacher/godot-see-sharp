@@ -10,6 +10,7 @@ public partial class MeleAttack : Spell
         Tripple,
     }
     private AnimatedSprite2D animatedSprite;
+    private int attackDamage = 1;
     public string ResourcePath = "res://Attacks/MeleAttack/MeleAttack.tscn";
 
     public override void _Ready()
@@ -25,36 +26,29 @@ public partial class MeleAttack : Spell
     public override void CastSpell(bool faceDirection)
     {
         animatedSprite.FlipH = faceDirection;
-        GD.Print("For mele attack use the MeleCast(bool faceDirection, CastAnimation cast) method");
         animatedSprite.Play("Cast");
     }
 
     public void MeleCast(bool faceDirection, CastAnimation cast)
     {
-        GD.Print(cast);
         switch (cast)
         {
             case CastAnimation.Single:
-                GD.Print("Single");
                 animatedSprite.FlipH = faceDirection;
                 animatedSprite.Play("Single");
                 break;
             case CastAnimation.Double:
-                GD.Print("Double");
                 animatedSprite.FlipH = faceDirection;
                 animatedSprite.Play("Double");
                 break;
             case CastAnimation.Tripple:
-                GD.Print("Tripple");
                 animatedSprite.FlipH = faceDirection;
                 animatedSprite.Play("Tripple");
-
                 break;
             default:
-                GD.Print("Default");
+                GD.Print("Default case: If you see this then something went wrong in MeleAttack.cs");
                 break;
         }
-
     }
 
     public override string LoadResourcePath()
@@ -67,21 +61,14 @@ public partial class MeleAttack : Spell
         if (body is Enemy)
         {
             Enemy e = body as Enemy;
-            e.TakeDamage(1);
+            int dammageAmount = animatedSprite.Animation == "Tripple" ? 2 : 1;
+            e.TakeDamage(dammageAmount);
+
         }
 
     }
     public void _on_animated_sprite_2d_animation_finished()
     {
-        if (animatedSprite.Animation == "Single")
-            QueueFree();
-        if (animatedSprite.Animation == "DoubleSlash")
-        {
-            QueueFree();
-        }
-        if (animatedSprite.Animation == "Tripple")
-        {
-            QueueFree();
-        }
+        QueueFree();
     }
 }

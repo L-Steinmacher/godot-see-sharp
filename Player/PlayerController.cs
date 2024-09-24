@@ -36,12 +36,12 @@ public partial class PlayerController : CharacterBody2D
     private double dashTimer = .3;
     private double dashTimeReset = .3;
     private double dashCooldownTimer = 1;
-    private double dashCooldownTimeReset = 1;
+    private double dashCooldownTimeReset = 0.7;
     private double damageTimer = .3;
     private double damageTimerReset = .3;
-    private int attackCount = 0;
+    public int attackCount = 0;
     public bool isAttacking = false;
-    private float comboResetTime = 1.0f;
+    private float comboResetTime = 0.5f;
     private Timer comboTimer;
     private bool isWallJumping = false;
     private double wallJumpTimer = .3;
@@ -49,7 +49,6 @@ public partial class PlayerController : CharacterBody2D
     private bool canDoubleJump = true;
     private bool isDoubleJumping = false;
     private bool isDead = false;
-    // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     public float gravityReset = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     private AnimatedSprite2D animatedSprite2D;
@@ -95,6 +94,7 @@ public partial class PlayerController : CharacterBody2D
                 if (!isAttacking)
                     // TODO handle sequence attacks with meleAttack
                     ProcessMeleAttack();
+                // StartMeleeAttack();
                 break;
             case PlayerState.Idle:
                 ProcessIdle(ref velocity);
@@ -113,7 +113,7 @@ public partial class PlayerController : CharacterBody2D
 
     private void InputManager(double delta)
     {
-        if (health > 0 && !isAttacking)
+        if (health > 0)
         {
             velocity = Velocity;
             // Add the gravity.
@@ -145,53 +145,54 @@ public partial class PlayerController : CharacterBody2D
             }
             if (Input.IsActionJustPressed("attack"))
             {
-                // GD.Print(attackCount);
-                // attackCount += 1;
-                // CurrentState = PlayerState.MeleAttacking;
                 StartMeleeAttack();
             }
 
-            if (Input.IsActionJustPressed("jump"))
+            if (!isAttacking)
             {
-                velocity = ProcessJump(velocity);
-            }
-            if (Input.IsActionJustReleased("jump") && velocity.Y < minJumpVelocity)
-            {
-                velocity.Y = minJumpVelocity;
-            }
-            if (Input.IsActionJustPressed("dash"))
-            {
-                CurrentState = PlayerState.Dashing;
-                // velocity = ProcessDash(delta, velocity, facingDirection);
-            }
-            if (Input.IsActionJustPressed("interact"))
-            {
-                InteractWithObject();
-            }
 
-            if (Input.IsActionJustPressed("cycle_attack"))
-            {
-                GameManager.MagicController.CycleAttack();
-            }
-            if (Input.IsActionJustPressed("open_menu"))
-            {
-                /**
-                *TODO: This pauses the entire game and needs to pause a nested pause node so we can unpause!
-                */
-                if (GetTree().Paused)
+                if (Input.IsActionJustPressed("jump"))
                 {
-                    GetTree().Paused = false; // Unpause the game
-                    GD.Print("Game Unpaused");
+                    velocity = ProcessJump(velocity);
                 }
-                else
+                if (Input.IsActionJustReleased("jump") && velocity.Y < minJumpVelocity)
                 {
-                    GetTree().Paused = true; // Pause the game
-                    GD.Print("Game Paused");
+                    velocity.Y = minJumpVelocity;
                 }
+                if (Input.IsActionJustPressed("dash"))
+                {
+                    CurrentState = PlayerState.Dashing;
+                    // velocity = ProcessDash(delta, velocity, facingDirection);
+                }
+                if (Input.IsActionJustPressed("interact"))
+                {
+                    InteractWithObject();
+                }
+
+                if (Input.IsActionJustPressed("cycle_attack"))
+                {
+                    GameManager.MagicController.CycleAttack();
+                }
+                if (Input.IsActionJustPressed("open_menu"))
+                {
+                    /**
+                    *TODO: This pauses the entire game and needs to pause a nested pause node so we can unpause!
+                    */
+                    if (GetTree().Paused)
+                    {
+                        GetTree().Paused = false; // Unpause the game
+                        GD.Print("Game Unpaused");
+                    }
+                    else
+                    {
+                        GetTree().Paused = true; // Pause the game
+                        GD.Print("Game Paused");
+                    }
+                }
+                facingDirection = ProcessMovement(ref velocity);
+                Velocity = velocity;
+                MoveAndSlide();
             }
-            facingDirection = ProcessMovement(ref velocity);
-            Velocity = velocity;
-            MoveAndSlide();
         }
     }
 
@@ -199,7 +200,6 @@ public partial class PlayerController : CharacterBody2D
     {
         if (!comboTimer.IsStopped()) // Combo is active
         {
-            GD.Print("Combo Active - Current attackCount: ", attackCount);
             attackCount = Mathf.Min(attackCount + 1, 3); // Limit to triple attack
         }
         else
@@ -208,7 +208,6 @@ public partial class PlayerController : CharacterBody2D
         }
 
         comboTimer.Start(); // Reset combo timer
-        GD.Print("Combo Timer started. Time left: ", comboTimer.TimeLeft);
         ExecuteMeleeAttack();
     }
 
@@ -224,15 +223,17 @@ public partial class PlayerController : CharacterBody2D
                 GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Single);
                 break;
             case 2:
+                animatedSprite2D.Play("Attack");
                 GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Double);
                 break;
             case 3:
                 GameManager.MagicController.MeleCast(faceDirection, MeleAttack.CastAnimation.Tripple);
+                OnComboTimeout();
+                break;
+            default:
                 break;
         }
-
-        // Increment attackCount only after the first attack animation finishes
-        attackCount = Mathf.Min(attackCount + 1, 3); // Increment attack count after execution
+        isAttacking = false;
     }
 
     private void ProcessTimers(double delta)
@@ -534,12 +535,11 @@ public partial class PlayerController : CharacterBody2D
             case "Attack":
                 // Handle attack animation completion and manage combo attacks
                 attackCount -= 1;
-
                 if (attackCount > 0)
                 {
-                    // If there are remaining attacks in the combo, continue the attack animation
-                    animatedSprite2D.Play("Attack");
+                    // TODO: WHAT DO HERE?!
                 }
+
                 else
                 {
                     // End the combo and reset the player's state to Idle
@@ -559,7 +559,7 @@ public partial class PlayerController : CharacterBody2D
         }
     }
 
-    private void OnComboTimeout()
+    public void OnComboTimeout()
     {
         // Reset combo when time runs out
         attackCount = 0;
